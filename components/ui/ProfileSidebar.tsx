@@ -3,18 +3,18 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import {
-    Alert,
-    Animated,
-    Dimensions,
-    Modal,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View,
+  Alert,
+  Animated,
+  Dimensions,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import { AboutSection, AchievementsSection, HelpSection, ProfileSection, SettingsSection } from './ProfileSections';
+import { AboutSection, HelpSection, ProfileSection, SettingsSection } from './ProfileSections';
 
 interface ProfileSidebarProps {
   visible: boolean;
@@ -47,7 +47,6 @@ export default function ProfileSidebar({ visible, onClose }: ProfileSidebarProps
   const menuItems = [
     { id: 'profile', title: 'Profile', icon: 'person-outline', color: '#7A4D3A', gradient: ['#7A4D3A', '#B75F37'] },
     { id: 'settings', title: 'Settings', icon: 'settings-outline', color: '#2196F3', gradient: ['#2196F3', '#21CBF3'] },
-    { id: 'achievements', title: 'Achievements', icon: 'trophy-outline', color: '#FFD700', gradient: ['#FFD700', '#FFA000'] },
     { id: 'help', title: 'Help & Support', icon: 'help-circle-outline', color: '#9C27B0', gradient: ['#9C27B0', '#BA68C8'] },
     { id: 'about', title: 'About', icon: 'information-circle-outline', color: '#607D8B', gradient: ['#607D8B', '#90A4AE'] },
     { id: 'logout', title: 'Logout', icon: 'log-out-outline', color: '#F44336', gradient: ['#F44336', '#EF5350'] },
@@ -93,8 +92,6 @@ export default function ProfileSidebar({ visible, onClose }: ProfileSidebarProps
         return <ProfileSection onBack={handleBackToMenu} />;
       case 'settings':
         return <SettingsSection onBack={handleBackToMenu} />;
-      case 'achievements':
-        return <AchievementsSection onBack={handleBackToMenu} />;
       case 'help':
         return <HelpSection onBack={handleBackToMenu} />;
       case 'about':
@@ -145,8 +142,8 @@ export default function ProfileSidebar({ visible, onClose }: ProfileSidebarProps
                       <View style={styles.onlineIndicator} />
                     </View>
                     <View style={styles.profileInfo}>
-                      <Text style={styles.profileName}>John Doe</Text>
-                      <Text style={styles.profileEmail}>john.doe@example.com</Text>
+                      <Text style={styles.profileName}>Bavi Bavi</Text>
+                      <Text style={styles.profileEmail}>bavi123@gmail.com</Text>
                       <View style={styles.levelBadge}>
                         <Ionicons name="star" size={12} color="#FFD700" />
                         <Text style={styles.levelText}>Intermediate</Text>
@@ -191,11 +188,6 @@ export default function ProfileSidebar({ visible, onClose }: ProfileSidebarProps
                           <Text style={styles.menuItemText}>{item.title}</Text>
                         </View>
                         <View style={styles.menuItemRight}>
-                          {item.id === 'achievements' && (
-                            <View style={styles.badgeIndicator}>
-                              <Text style={styles.badgeText}>8</Text>
-                            </View>
-                          )}
                           <Ionicons name="chevron-forward" size={16} color="#C0C0C0" />
                         </View>
                       </TouchableOpacity>
@@ -206,7 +198,7 @@ export default function ProfileSidebar({ visible, onClose }: ProfileSidebarProps
                   <View style={styles.versionContainer}>
                     <View style={styles.versionDivider} />
                     <Text style={styles.versionText}>Bharatanatyam App v1.0.0</Text>
-                    <Text style={styles.copyrightText}>© 2024 All rights reserved</Text>
+                    <Text style={styles.copyrightText}>© 2025 All rights reserved</Text>
                   </View>
                 </ScrollView>
               )}

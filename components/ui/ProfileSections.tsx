@@ -90,145 +90,118 @@ export const ProfileSection = ({ onBack }: SectionProps) => {
   );
 };
 
-export const SettingsSection = ({ onBack }: SectionProps) => (
-  <View style={styles.sectionContainer}>
-    <View style={styles.sectionHeader}>
-      <TouchableOpacity onPress={onBack} style={styles.backButton}>
-        <Ionicons name="arrow-back" size={24} color="#7A4D3A" />
-      </TouchableOpacity>
-      <Text style={styles.sectionTitle}>Settings</Text>
-      <View style={styles.placeholder} />
-    </View>
+export const SettingsSection = ({ onBack }: SectionProps) => {
+  const [pushEnabled, setPushEnabled] = React.useState(true);
+  const [soundEnabled, setSoundEnabled] = React.useState(true);
+  const [darkModeEnabled, setDarkModeEnabled] = React.useState(false);
 
-    <ScrollView 
-      style={styles.scrollableContent}
-      showsVerticalScrollIndicator={false}
-      bounces={true}
-      contentContainerStyle={styles.scrollContent}
-      scrollEventThrottle={16}
-      keyboardShouldPersistTaps="handled"
-    >
-
-    <View style={styles.settingsGroup}>
-      <Text style={styles.groupTitle}>Preferences</Text>
-      
-      <View style={styles.settingItem}>
-        <View style={styles.settingLeft}>
-          <Ionicons name="notifications-outline" size={20} color="#7A4D3A" />
-          <Text style={styles.settingText}>Push Notifications</Text>
-        </View>
-        <View style={styles.toggle}>
-          <View style={styles.toggleActive} />
-        </View>
+  return (
+    <View style={styles.sectionContainer}>
+      <View style={styles.sectionHeader}>
+        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#7A4D3A" />
+        </TouchableOpacity>
+        <Text style={styles.sectionTitle}>Settings</Text>
+        <View style={styles.placeholder} />
       </View>
 
-      <View style={styles.settingItem}>
-        <View style={styles.settingLeft}>
-          <Ionicons name="volume-high-outline" size={20} color="#7A4D3A" />
-          <Text style={styles.settingText}>Sound Effects</Text>
-        </View>
-        <View style={styles.toggle}>
-          <View style={styles.toggleActive} />
-        </View>
-      </View>
+      <ScrollView 
+        style={styles.scrollableContent}
+        showsVerticalScrollIndicator={false}
+        bounces={true}
+        contentContainerStyle={styles.scrollContent}
+        scrollEventThrottle={16}
+        keyboardShouldPersistTaps="handled"
+      >
 
-      <View style={styles.settingItem}>
-        <View style={styles.settingLeft}>
-          <Ionicons name="moon-outline" size={20} color="#7A4D3A" />
-          <Text style={styles.settingText}>Dark Mode</Text>
-        </View>
-        <View style={styles.toggle}>
-          <View style={styles.toggleInactive} />
-        </View>
-      </View>
-    </View>
-
-    <View style={styles.settingsGroup}>
-      <Text style={styles.groupTitle}>Account</Text>
-      
-      <TouchableOpacity style={styles.settingItem}>
-        <View style={styles.settingLeft}>
-          <Ionicons name="person-outline" size={20} color="#7A4D3A" />
-          <Text style={styles.settingText}>Edit Profile</Text>
-        </View>
-        <Ionicons name="chevron-forward" size={16} color="#C0C0C0" />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.settingItem}>
-        <View style={styles.settingLeft}>
-          <Ionicons name="lock-closed-outline" size={20} color="#7A4D3A" />
-          <Text style={styles.settingText}>Change Password</Text>
-        </View>
-        <Ionicons name="chevron-forward" size={16} color="#C0C0C0" />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.settingItem}>
-        <View style={styles.settingLeft}>
-          <Ionicons name="shield-checkmark-outline" size={20} color="#7A4D3A" />
-          <Text style={styles.settingText}>Privacy Settings</Text>
-        </View>
-        <Ionicons name="chevron-forward" size={16} color="#C0C0C0" />
-      </TouchableOpacity>
-    </View>
-    </ScrollView>
-  </View>
-);
-
-export const AchievementsSection = ({ onBack }: SectionProps) => (
-  <View style={styles.sectionContainer}>
-    <View style={styles.sectionHeader}>
-      <TouchableOpacity onPress={onBack} style={styles.backButton}>
-        <Ionicons name="arrow-back" size={24} color="#7A4D3A" />
-      </TouchableOpacity>
-      <Text style={styles.sectionTitle}>Achievements</Text>
-      <View style={styles.placeholder} />
-    </View>
-
-    <ScrollView 
-      style={styles.scrollableContent}
-      showsVerticalScrollIndicator={false}
-      bounces={true}
-      contentContainerStyle={styles.scrollContent}
-      scrollEventThrottle={16}
-      keyboardShouldPersistTaps="handled"
-    >
-
-    <View style={styles.achievementCard}>
-      <View style={styles.achievementHeader}>
-        <Ionicons name="trophy" size={24} color="#FFD700" />
-        <Text style={styles.achievementTitle}>Your Achievements</Text>
-      </View>
-      <Text style={styles.achievementSubtitle}>8 of 15 badges earned</Text>
-    </View>
-
-    <View style={styles.badgesContainer}>
-      {[
-        { name: 'First Steps', description: 'Complete your first class', earned: true, icon: 'footsteps' },
-        { name: 'Dedicated Learner', description: 'Attend 10 classes', earned: true, icon: 'book' },
-        { name: 'Mudra Master', description: 'Master 20 mudras', earned: true, icon: 'hand-left' },
-        { name: 'Rhythm Keeper', description: 'Perfect timing in 5 routines', earned: true, icon: 'musical-notes' },
-        { name: 'Flexibility Pro', description: 'Complete 30 stretching sessions', earned: false, icon: 'fitness' },
-        { name: 'Performance Ready', description: 'Complete a full performance', earned: false, icon: 'star' },
-      ].map((badge, index) => (
-        <View key={index} style={[styles.badgeItem, !badge.earned && styles.badgeItemLocked]}>
-          <View style={[styles.badgeIcon, !badge.earned && styles.badgeIconLocked]}>
-            <Ionicons 
-              name={badge.icon as any} 
-              size={20} 
-              color={badge.earned ? '#FFD700' : '#C0C0C0'} 
-            />
+      <View style={[styles.settingsGroup, styles.settingsGroupTop]}>
+        <Text style={styles.groupTitle}>Preferences</Text>
+        
+        <View style={styles.settingItem}>
+          <View style={styles.settingLeft}>
+            <Ionicons name="notifications-outline" size={20} color="#7A4D3A" />
+            <Text style={styles.settingText}>Push Notifications</Text>
           </View>
-          <View style={styles.badgeInfo}>
-            <Text style={[styles.badgeName, !badge.earned && styles.badgeNameLocked]}>{badge.name}</Text>
-            <Text style={[styles.badgeDescription, !badge.earned && styles.badgeDescriptionLocked]}>{badge.description}</Text>
-          </View>
-          {badge.earned && <Ionicons name="checkmark-circle" size={20} color="#4CAF50" />}
+          <TouchableOpacity
+            onPress={() => setPushEnabled(prev => !prev)}
+            activeOpacity={0.8}
+            accessibilityRole="switch"
+            accessibilityState={{ checked: pushEnabled }}
+          >
+            <View style={styles.toggle}>
+              <View style={pushEnabled ? styles.toggleActive : styles.toggleInactive} />
+            </View>
+          </TouchableOpacity>
         </View>
-      ))}
+
+        <View style={styles.settingItem}>
+          <View style={styles.settingLeft}>
+            <Ionicons name="volume-high-outline" size={20} color="#7A4D3A" />
+            <Text style={styles.settingText}>Sound Effects</Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => setSoundEnabled(prev => !prev)}
+            activeOpacity={0.8}
+            accessibilityRole="switch"
+            accessibilityState={{ checked: soundEnabled }}
+          >
+            <View style={styles.toggle}>
+              <View style={soundEnabled ? styles.toggleActive : styles.toggleInactive} />
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.settingItem}>
+          <View style={styles.settingLeft}>
+            <Ionicons name="moon-outline" size={20} color="#7A4D3A" />
+            <Text style={styles.settingText}>Dark Mode</Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => setDarkModeEnabled(prev => !prev)}
+            activeOpacity={0.8}
+            accessibilityRole="switch"
+            accessibilityState={{ checked: darkModeEnabled }}
+          >
+            <View style={styles.toggle}>
+              <View style={darkModeEnabled ? styles.toggleActive : styles.toggleInactive} />
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={styles.settingsGroup}>
+        <Text style={styles.groupTitle}>Account</Text>
+        
+        <TouchableOpacity style={styles.settingItem}>
+          <View style={styles.settingLeft}>
+            <Ionicons name="person-outline" size={20} color="#7A4D3A" />
+            <Text style={styles.settingText}>Edit Profile</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={16} color="#C0C0C0" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.settingItem}>
+          <View style={styles.settingLeft}>
+            <Ionicons name="lock-closed-outline" size={20} color="#7A4D3A" />
+            <Text style={styles.settingText}>Change Password</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={16} color="#C0C0C0" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.settingItem}>
+          <View style={styles.settingLeft}>
+            <Ionicons name="shield-checkmark-outline" size={20} color="#7A4D3A" />
+            <Text style={styles.settingText}>Privacy Settings</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={16} color="#C0C0C0" />
+        </TouchableOpacity>
+      </View>
+      </ScrollView>
     </View>
-    </ScrollView>
-  </View>
-);
+  );
+};
+
+ 
 
 export const ProgressSection = ({ onBack }: SectionProps) => (
   <View style={styles.sectionContainer}>
@@ -482,7 +455,7 @@ export const AboutSection = ({ onBack }: SectionProps) => (
       </View>
 
       <View style={styles.copyrightCard}>
-        <Text style={styles.copyrightText}>© 2024 Bharatanatyam Learning App</Text>
+        <Text style={styles.copyrightText}>© 2025 Bharatanatyam Learning App</Text>
         <Text style={styles.copyrightSubtext}>All rights reserved</Text>
         <Text style={styles.copyrightSubtext}>Made with ❤️ for dance enthusiasts</Text>
       </View>
@@ -701,6 +674,9 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
   },
+  settingsGroupTop: {
+    paddingTop: 32,
+  },
   groupTitle: {
     fontSize: 18,
     fontWeight: '700',
@@ -746,82 +722,6 @@ const styles = StyleSheet.create({
     borderRadius: 13,
     backgroundColor: '#FFFFFF',
     alignSelf: 'flex-start',
-  },
-  achievementCard: {
-    backgroundColor: '#FFFFFF',
-    margin: 20,
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  achievementHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  achievementTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#7A4D3A',
-    marginLeft: 12,
-  },
-  achievementSubtitle: {
-    fontSize: 14,
-    color: '#666',
-  },
-  badgesContainer: {
-    paddingHorizontal: 20,
-  },
-  badgeItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: 16,
-    marginBottom: 12,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  badgeItemLocked: {
-    opacity: 0.6,
-  },
-  badgeIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFF8E1',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  badgeIconLocked: {
-    backgroundColor: '#F5F5F5',
-  },
-  badgeInfo: {
-    flex: 1,
-  },
-  badgeName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 4,
-  },
-  badgeNameLocked: {
-    color: '#999',
-  },
-  badgeDescription: {
-    fontSize: 14,
-    color: '#666',
-  },
-  badgeDescriptionLocked: {
-    color: '#CCC',
   },
   progressCard: {
     backgroundColor: '#FFFFFF',
