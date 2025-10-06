@@ -14,7 +14,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { AboutSection, HelpSection, ProfileSection, SettingsSection } from './ProfileSections';
+import { AboutSection, ChangePasswordSection, CookiePolicySection, EditProfileSection, HelpSection, PrivacyPolicySection, PrivacySettingsSection, ProfileSection, SettingsSection, TermsSection } from './ProfileSections';
 
 interface ProfileSidebarProps {
   visible: boolean;
@@ -91,11 +91,23 @@ export default function ProfileSidebar({ visible, onClose }: ProfileSidebarProps
       case 'profile':
         return <ProfileSection onBack={handleBackToMenu} />;
       case 'settings':
-        return <SettingsSection onBack={handleBackToMenu} />;
+        return <SettingsSection onBack={handleBackToMenu} onNavigate={(target) => setCurrentSection(target)} />;
       case 'help':
         return <HelpSection onBack={handleBackToMenu} />;
       case 'about':
-        return <AboutSection onBack={handleBackToMenu} />;
+        return <AboutSection onBack={handleBackToMenu} onNavigate={(target) => setCurrentSection(target)} />;
+      case 'aboutTerms':
+        return <TermsSection onBack={() => setCurrentSection('about')} />;
+      case 'aboutPrivacy':
+        return <PrivacyPolicySection onBack={() => setCurrentSection('about')} />;
+      case 'aboutCookies':
+        return <CookiePolicySection onBack={() => setCurrentSection('about')} />;
+      case 'editProfile':
+        return <EditProfileSection onBack={() => setCurrentSection('settings')} />;
+      case 'changePassword':
+        return <ChangePasswordSection onBack={() => setCurrentSection('settings')} />;
+      case 'privacySettings':
+        return <PrivacySettingsSection onBack={() => setCurrentSection('settings')} />;
       default:
         return null;
     }
@@ -128,10 +140,8 @@ export default function ProfileSidebar({ visible, onClose }: ProfileSidebarProps
                   showsVerticalScrollIndicator={false}
                   bounces={false}
                 >
-                  {/* Handle bar */}
                   <View style={styles.handleBar} />
                   
-                  {/* Profile Header */}
                   <View style={styles.profileHeader}>
                     <View style={styles.profileImageContainer}>
                       <Image
