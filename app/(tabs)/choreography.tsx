@@ -1,3 +1,5 @@
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -37,9 +39,16 @@ export default function ChoreographyScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <LinearGradient
+        colors={["#FFF3EE", "#FFE6DB"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.gradientBackground}
+      />
       <Header title="Choreography" />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.sectionCard}>
+          <BlurView pointerEvents="none" intensity={30} tint="light" style={styles.blurFill} />
           <Text style={styles.sectionLabel}>Live Class</Text>
           <Text style={styles.liveSubtitle}>Next session: Today, 6:00 PM IST</Text>
           <View style={styles.liveRow}>
@@ -76,6 +85,7 @@ export default function ChoreographyScreen() {
               setIsAboutVisible(true);
             }}
           >
+            <BlurView pointerEvents="none" intensity={30} tint="light" style={styles.blurFill} />
             <Text style={styles.sectionLabel}>Teacher</Text>
             <Text style={styles.teacherName}>{t.name}</Text>
             <Text style={styles.mutedText}>{t.title} • {t.experience}</Text>
@@ -157,6 +167,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9EDEF',
     paddingTop: 20,
   },
+  gradientBackground: {
+    ...StyleSheet.absoluteFillObject,
+  },
   content: {
     paddingHorizontal: 16,
     paddingTop: 12,
@@ -164,14 +177,20 @@ const styles = StyleSheet.create({
     paddingBottom: 120,
   },
   sectionCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255,255,255,0.25)',
     borderRadius: 12,
     padding: 16,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.4)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 6,
     elevation: 2,
+  },
+  blurFill: {
+    ...StyleSheet.absoluteFillObject,
   },
   sectionLabel: {
     color: '#7A3E4A',
