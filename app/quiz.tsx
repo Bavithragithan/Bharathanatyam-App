@@ -27,7 +27,7 @@ export default function QuizScreen() {
 
   return (
     <ImageBackground 
-      source={require('@/assets/images/main-menu.jpeg')} 
+      source={require('@/assets/images/main-menu.jpg')} 
       style={styles.backgroundImage}
       resizeMode="cover"
     >

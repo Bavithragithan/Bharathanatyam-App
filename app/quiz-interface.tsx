@@ -116,7 +116,7 @@ export default function QuizInterfaceScreen() {
   if (quizCompleted) {
     return (
       <ImageBackground 
-        source={require('@/assets/images/main-menu.jpeg')} 
+        source={require('@/assets/images/main-menu.jpg')} 
         style={styles.backgroundImage}
         resizeMode="cover"
       >
@@ -237,7 +237,7 @@ export default function QuizInterfaceScreen() {
 
   return (
     <ImageBackground 
-      source={require('@/assets/images/main-menu.jpeg')} 
+      source={require('@/assets/images/main-menu.jpg')} 
       style={styles.backgroundImage}
       resizeMode="cover"
     >
