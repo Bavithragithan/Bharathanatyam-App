@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import React, { useState } from 'react';
 import {
@@ -18,7 +17,6 @@ interface HeaderProps {
   backgroundColor?: string;
 }
 
-// Example Bharatanatyam app notifications
 const notifications = [
   {
     id: '1',
@@ -61,17 +59,14 @@ export default function Header({ title, backgroundColor = '#F9EDEF' }: HeaderPro
 
   return (
     <>
-      {/* Header Bar */}
       <View style={[styles.header, { backgroundColor }]}>
         <Text style={styles.headerTitle}>{title}</Text>
 
         <View style={styles.headerRight}>
-          {/* Notification Icon */}
           <TouchableOpacity onPress={handleNotificationPress}>
             <Ionicons name="notifications-outline" size={26} color="#7A4D3A" />
           </TouchableOpacity>
 
-          {/* Profile Avatar */}
           <TouchableOpacity onPress={handleProfilePress} style={styles.profileButton}>
             <Image
               source={require('@/assets/images/user.png')}
@@ -82,10 +77,8 @@ export default function Header({ title, backgroundColor = '#F9EDEF' }: HeaderPro
         </View>
       </View>
 
-      {/* Profile Sidebar */}
       <ProfileSidebar visible={isProfileSidebarVisible} onClose={handleCloseSidebar} />
 
-      {/* Glassy Notification Popup */}
       <Modal
         visible={isNotificationVisible}
         transparent
@@ -95,7 +88,7 @@ export default function Header({ title, backgroundColor = '#F9EDEF' }: HeaderPro
         <TouchableWithoutFeedback onPress={handleCloseNotification}>
           <View style={styles.overlay}>
             <TouchableWithoutFeedback>
-              <BlurView intensity={80} tint="light" style={styles.popupContainer}>
+              <View style={styles.popupContainer}>
                 <Text style={styles.popupTitle}>Notifications</Text>
 
                 <FlatList
@@ -115,7 +108,7 @@ export default function Header({ title, backgroundColor = '#F9EDEF' }: HeaderPro
                   )}
                   ItemSeparatorComponent={() => <View style={styles.separator} />}
                 />
-              </BlurView>
+              </View>
             </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
@@ -162,9 +155,9 @@ const styles = StyleSheet.create({
     width: 300,
     padding: 14,
     borderRadius: 22,
-    overflow: 'hidden',
+    backgroundColor: '#FFFFFF', // ✅ solid white (no blur)
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.4)',
+    borderColor: 'rgba(0,0,0,0.1)',
     shadowColor: '#000',
     shadowOpacity: 0.25,
     shadowRadius: 10,
@@ -181,7 +174,7 @@ const styles = StyleSheet.create({
   notificationCard: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: 'rgba(255,255,255,0.25)',
+    backgroundColor: '#F9EDEF',
     borderRadius: 16,
     padding: 10,
     gap: 10,

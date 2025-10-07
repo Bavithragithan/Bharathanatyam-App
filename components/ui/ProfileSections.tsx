@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+import { enrolledCoursesData } from '../../data';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -68,7 +69,6 @@ export const ProfileSection = ({ onBack }: SectionProps) => {
           </View>
         </View>
 
-        {/* Personal Information */}
         <View style={styles.infoCardCompact}>
           <Text style={styles.cardTitle}>Personal Information</Text>
           <View style={styles.infoRow}>
@@ -92,6 +92,247 @@ export const ProfileSection = ({ onBack }: SectionProps) => {
             <Text style={styles.infoValue}>12 days</Text>
           </View>
         </View>
+      </ScrollView>
+    </View>
+  );
+};
+
+export const EnrolledCoursesSection = ({ onBack }: SectionProps) => {
+  const enrolledCourses = enrolledCoursesData;
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Completed':
+        return '#4CAF50';
+      case 'In Progress':
+        return '#2196F3';
+      case 'Not Started':
+        return '#FF9800';
+      default:
+        return '#666';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'Completed':
+        return 'checkmark-circle';
+      case 'In Progress':
+        return 'play-circle';
+      case 'Not Started':
+        return 'time';
+      default:
+        return 'help-circle';
+    }
+  };
+
+  const getPaymentStatusColor = (paymentStatus: string) => {
+    switch (paymentStatus) {
+      case 'Paid':
+        return '#4CAF50';
+      case 'Payment Due':
+        return '#FF5722';
+      case 'Overdue':
+        return '#F44336';
+      case 'Refunded':
+        return '#9C27B0';
+      default:
+        return '#666';
+    }
+  };
+
+  const getPaymentStatusIcon = (paymentStatus: string) => {
+    switch (paymentStatus) {
+      case 'Paid':
+        return 'checkmark-circle';
+      case 'Payment Due':
+        return 'alert-circle';
+      case 'Overdue':
+        return 'warning';
+      case 'Refunded':
+        return 'refresh-circle';
+      default:
+        return 'help-circle';
+    }
+  };
+
+  return (
+    <View style={styles.sectionContainer}>
+      <View style={styles.sectionHeader}>
+        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#7A4D3A" />
+        </TouchableOpacity>
+        <Text style={styles.sectionTitle}>Enrolled Courses</Text>
+        <View style={styles.placeholder} />
+      </View>
+
+      <ScrollView
+        style={styles.scrollableContent}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        bounces={true}
+        scrollEventThrottle={16}
+        keyboardShouldPersistTaps="handled"
+        nestedScrollEnabled={true}
+      >
+        <View style={styles.courseStatsCard}>
+          <Text style={styles.courseStatsTitle}>Your Learning Journey</Text>
+          <View style={styles.courseStatsRow}>
+            <View style={styles.courseStatItem}>
+              <Text style={styles.courseStatNumber}>4</Text>
+              <Text style={styles.courseStatLabel}>Total Courses</Text>
+            </View>
+            <View style={styles.courseStatItem}>
+              <Text style={styles.courseStatNumber}>2</Text>
+              <Text style={styles.courseStatLabel}>In Progress</Text>
+            </View>
+            <View style={styles.courseStatItem}>
+              <Text style={styles.courseStatNumber}>1</Text>
+              <Text style={styles.courseStatLabel}>Completed</Text>
+            </View>
+          </View>
+          
+          <View style={styles.paymentStatsRow}>
+            <View style={styles.paymentStatItem}>
+              <Ionicons name="card-outline" size={20} color="#4CAF50" />
+              <Text style={styles.paymentStatNumber}>3</Text>
+              <Text style={styles.paymentStatLabel}>Paid</Text>
+            </View>
+            <View style={styles.paymentStatItem}>
+              <Ionicons name="alert-circle-outline" size={20} color="#FF5722" />
+              <Text style={styles.paymentStatNumber}>1</Text>
+              <Text style={styles.paymentStatLabel}>Due</Text>
+            </View>
+          </View>
+          
+          <View style={styles.totalSpentRow}>
+            <View style={styles.totalSpentItem}>
+              <Ionicons name="wallet-outline" size={20} color="#7A4D3A" />
+              <Text style={styles.totalSpentNumber}>LKR 366,720</Text>
+              <Text style={styles.totalSpentLabel}>Total Spent</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.coursesContainer}>
+          {enrolledCourses.map((course, index) => (
+            <View key={course.id} style={[styles.courseCard, { marginTop: index === 0 ? 0 : 16 }]}>
+              <View style={styles.courseHeader}>
+                <Image source={course.thumbnail} style={styles.courseThumbnail} contentFit="cover" />
+                <View style={styles.courseInfo}>
+                  <Text style={styles.courseTitle}>{course.title}</Text>
+                  <Text style={styles.courseInstructor}>by {course.instructor}</Text>
+                  <View style={styles.courseMeta}>
+                    <View style={styles.courseLevel}>
+                      <Text style={styles.courseLevelText}>{course.level}</Text>
+                    </View>
+                    <Text style={styles.courseDuration}>{course.duration}</Text>
+                  </View>
+                </View>
+                <View style={styles.courseStatusContainer}>
+                  <Ionicons 
+                    name={getStatusIcon(course.status) as any} 
+                    size={16} 
+                    color={getStatusColor(course.status)} 
+                  />
+                  <Text style={[styles.courseStatus, { color: getStatusColor(course.status) }]}>
+                    {course.status}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.progressContainer}>
+                <View style={styles.progressHeader}>
+                  <Text style={styles.courseProgressLabel}>Progress</Text>
+                  <Text style={styles.progressPercentage}>{course.progress}%</Text>
+                </View>
+                <View style={styles.progressBar}>
+                  <View style={[styles.progressFill, { width: `${course.progress}%` }]} />
+                </View>
+              </View>
+
+              <View style={styles.courseDetails}>
+                <View style={styles.courseDetailRow}>
+                  <Ionicons name="calendar-outline" size={16} color="#7A4D3A" />
+                  <Text style={styles.courseDetailText}>
+                    {course.startDate} - {course.endDate}
+                  </Text>
+                </View>
+                {course.nextClass && (
+                  <View style={styles.courseDetailRow}>
+                    <Ionicons name="time-outline" size={16} color="#7A4D3A" />
+                    <Text style={styles.courseDetailText}>{course.nextClass}</Text>
+                  </View>
+                )}
+              </View>
+
+              {/* Payment Information */}
+              <View style={styles.paymentInfo}>
+                <View style={styles.paymentHeader}>
+                  <View style={styles.paymentStatusContainer}>
+                    <Ionicons 
+                      name={getPaymentStatusIcon(course.paymentStatus) as any} 
+                      size={16} 
+                      color={getPaymentStatusColor(course.paymentStatus)} 
+                    />
+                    <Text style={[styles.paymentStatus, { color: getPaymentStatusColor(course.paymentStatus) }]}>
+                      {course.paymentStatus}
+                    </Text>
+                  </View>
+                  <Text style={styles.paymentAmount}>{course.amount}</Text>
+                </View>
+                
+                {course.paymentStatus === 'Paid' && course.paymentDate && (
+                  <View style={styles.paymentDetails}>
+                    <Text style={styles.paymentDetailText}>
+                      Paid on {course.paymentDate} via {course.paymentMethod}
+                    </Text>
+                  </View>
+                )}
+                
+                {course.paymentStatus === 'Payment Due' && course.dueDate && (
+                  <View style={styles.paymentDetails}>
+                    <Text style={[styles.paymentDetailText, styles.paymentDueText]}>
+                      Due on {course.dueDate}
+                    </Text>
+                  </View>
+                )}
+              </View>
+
+              <View style={styles.courseActions}>
+                <TouchableOpacity style={styles.courseActionButton}>
+                  <Ionicons name="play-outline" size={16} color="#7A4D3A" />
+                  <Text style={styles.courseActionText}>Continue</Text>
+                </TouchableOpacity>
+                
+                {course.paymentStatus === 'Payment Due' ? (
+                  <TouchableOpacity style={[styles.courseActionButton, styles.payNowButton]}>
+                    <Ionicons name="card-outline" size={16} color="#FFFFFF" />
+                    <Text style={[styles.courseActionText, styles.payNowText]}>Pay Now</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity style={styles.courseActionButton}>
+                    <Ionicons name="receipt-outline" size={16} color="#7A4D3A" />
+                    <Text style={styles.courseActionText}>Invoice</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+          ))}
+        </View>
+
+        {enrolledCourses.length === 0 && (
+          <View style={styles.emptyState}>
+            <Ionicons name="book-outline" size={64} color="#C0C0C0" />
+            <Text style={styles.emptyStateTitle}>No Enrolled Courses</Text>
+            <Text style={styles.emptyStateText}>
+              Start your Bharatanatyam journey by enrolling in courses from our catalog.
+            </Text>
+            <TouchableOpacity style={styles.browseButton}>
+              <Text style={styles.browseButtonText}>Browse Courses</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -1090,6 +1331,7 @@ const styles = StyleSheet.create({
   },
   settingsGroupTop: {
     paddingTop: 32,
+    marginTop: 16,
   },
   groupTitle: {
     fontSize: 18,
@@ -1478,5 +1720,286 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginBottom: 4,
+  },
+  // Enrolled Courses Styles
+  courseStatsCard: {
+    backgroundColor: '#FFFFFF',
+    margin: 20,
+    marginTop: 16,
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  courseStatsTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#7A4D3A',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  courseStatsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  courseStatItem: {
+    alignItems: 'center',
+  },
+  courseStatNumber: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#4CAF50',
+    marginBottom: 4,
+  },
+  courseStatLabel: {
+    fontSize: 12,
+    color: '#666',
+    fontWeight: '500',
+  },
+  coursesContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  courseCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  courseHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  courseThumbnail: {
+    width: 60,
+    height: 60,
+    borderRadius: 12,
+    marginRight: 12,
+  },
+  courseInfo: {
+    flex: 1,
+  },
+  courseTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#7A4D3A',
+    marginBottom: 4,
+  },
+  courseInstructor: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+  },
+  courseMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  courseLevel: {
+    backgroundColor: '#F0F8FF',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  courseLevelText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#2196F3',
+  },
+  courseDuration: {
+    fontSize: 12,
+    color: '#666',
+  },
+  courseStatusContainer: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    width: 90,
+  },
+  courseStatus: {
+    fontSize: 12,
+    fontWeight: '600',
+    marginTop: 4,
+    textAlign: 'right',
+  },
+  progressContainer: {
+    marginBottom: 16,
+  },
+  progressHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  courseProgressLabel: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '500',
+  },
+  progressPercentage: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#7A4D3A',
+  },
+  courseDetails: {
+    marginBottom: 16,
+  },
+  courseDetailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  courseDetailText: {
+    fontSize: 14,
+    color: '#666',
+    marginLeft: 8,
+  },
+  courseActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  courseActionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F8F9FA',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    flex: 1,
+    marginHorizontal: 4,
+    justifyContent: 'center',
+  },
+  courseActionText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#7A4D3A',
+    marginLeft: 6,
+  },
+  emptyState: {
+    alignItems: 'center',
+    paddingVertical: 60,
+    paddingHorizontal: 40,
+  },
+  emptyStateTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#7A4D3A',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptyStateText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 24,
+  },
+  browseButton: {
+    backgroundColor: '#7A4D3A',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 12,
+  },
+  browseButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  // Payment Information Styles
+  paymentStatsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+  },
+  paymentStatItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  paymentStatNumber: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#7A4D3A',
+    marginLeft: 6,
+  },
+  paymentStatLabel: {
+    fontSize: 12,
+    color: '#666',
+    marginLeft: 4,
+  },
+  totalSpentRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+  },
+  totalSpentItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  totalSpentNumber: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#7A4D3A',
+    marginLeft: 8,
+  },
+  totalSpentLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginLeft: 6,
+    fontWeight: '600',
+  },
+  paymentInfo: {
+    backgroundColor: '#F8F9FA',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 16,
+  },
+  paymentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  paymentStatusContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  paymentStatus: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: 6,
+  },
+  paymentAmount: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#7A4D3A',
+  },
+  paymentDetails: {
+    marginTop: 4,
+  },
+  paymentDetailText: {
+    fontSize: 12,
+    color: '#666',
+  },
+  paymentDueText: {
+    color: '#FF5722',
+    fontWeight: '600',
+  },
+  payNowButton: {
+    backgroundColor: '#FF5722',
+  },
+  payNowText: {
+    color: '#FFFFFF',
   },
 });
