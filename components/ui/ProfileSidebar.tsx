@@ -3,18 +3,18 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import {
-  Alert,
-  Animated,
-  Dimensions,
-  Modal,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
+    Alert,
+    Animated,
+    Dimensions,
+    Modal,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View,
 } from 'react-native';
-import { AboutSection, ChangePasswordSection, CookiePolicySection, EditProfileSection, HelpSection, PrivacyPolicySection, PrivacySettingsSection, ProfileSection, SettingsSection, TermsSection } from './ProfileSections';
+import { AboutSection, ChangePasswordSection, CookiePolicySection, EditProfileSection, EnrolledCoursesSection, HelpSection, PrivacyPolicySection, PrivacySettingsSection, ProfileSection, SettingsSection, TermsSection } from './ProfileSections';
 
 interface ProfileSidebarProps {
   visible: boolean;
@@ -46,6 +46,7 @@ export default function ProfileSidebar({ visible, onClose }: ProfileSidebarProps
 
   const menuItems = [
     { id: 'profile', title: 'Profile', icon: 'person-outline', color: '#7A4D3A', gradient: ['#7A4D3A', '#B75F37'] },
+    { id: 'enrolledCourses', title: 'Enrolled Courses', icon: 'book-outline', color: '#4CAF50', gradient: ['#4CAF50', '#66BB6A'] },
     { id: 'settings', title: 'Settings', icon: 'settings-outline', color: '#2196F3', gradient: ['#2196F3', '#21CBF3'] },
     { id: 'help', title: 'Help & Support', icon: 'help-circle-outline', color: '#9C27B0', gradient: ['#9C27B0', '#BA68C8'] },
     { id: 'about', title: 'About', icon: 'information-circle-outline', color: '#607D8B', gradient: ['#607D8B', '#90A4AE'] },
@@ -90,6 +91,8 @@ export default function ProfileSidebar({ visible, onClose }: ProfileSidebarProps
     switch (currentSection) {
       case 'profile':
         return <ProfileSection onBack={handleBackToMenu} />;
+      case 'enrolledCourses':
+        return <EnrolledCoursesSection onBack={handleBackToMenu} />;
       case 'settings':
         return <SettingsSection onBack={handleBackToMenu} onNavigate={(target) => setCurrentSection(target)} />;
       case 'help':
