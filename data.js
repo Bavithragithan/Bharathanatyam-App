@@ -1751,7 +1751,7 @@ export const techniquesData = {
           description: 'Three parts of a flag - represents crown, arrow, or flame',
           images: [
             require('./assets/images/tripataka1.png'),
-            require('./assets/images/tripataka2.png'),
+            require('./assets/images/Theory/tripataka.png'),
             require('./assets/images/tripataka3.png'),
           ],
           details: 'Tripataka mudra is formed by bending the ring finger while keeping other fingers extended. It symbolizes a crown, tree, arrow, flame, or the number three. This mudra is essential for depicting divine attributes and heroic characters in classical dance narratives.'
@@ -1761,9 +1761,9 @@ export const techniquesData = {
           title: 'Alapadma',
           description: 'The lotus mudra - represents blooming flowers and divine beauty',
           images: [
-            require('./assets/images/alapadma1.png'),
+            require('./assets/images/Theory/alapadma.png'),
             require('./assets/images/alapadma2.png'),
-            require('./assets/images/alapadma3.png'),
+            require('./assets/images/Theory/alapadma.png'),
           ],
           details: 'Alapadma mudra resembles a blooming lotus flower with all fingers spread apart gracefully. It represents purity, beauty, and divine grace. This mudra is frequently used to depict flowers, offerings to deities, and expressions of devotion and elegance.'
         }
@@ -1789,7 +1789,7 @@ export const techniquesData = {
           description: 'Expression of tranquility and serenity',
           images: [
             require('./assets/images/tripataka1.png'),
-            require('./assets/images/tripataka2.png'),
+            require('./assets/images/Theory/tripataka.png'),
             require('./assets/images/tripataka3.png'),
           ],
           details: 'Shanta represents peace, tranquility, and spiritual calm. The face remains composed with relaxed features, eyes focused yet gentle, and a serene expression. This emotion is often used in devotional sequences and meditative moments in classical dance.'
@@ -1799,9 +1799,9 @@ export const techniquesData = {
           title: 'Bhakti (Devotion)',
           description: 'Expression of devotion and reverence',
           images: [
-            require('./assets/images/alapadma1.png'),
+            require('./assets/images/Theory/alapadma.png'),
             require('./assets/images/alapadma2.png'),
-            require('./assets/images/alapadma3.png'),
+            require('./assets/images/Theory/alapadma.png'),
           ],
           details: 'Bhakti expression conveys deep devotion and reverence towards the divine. The eyes look upward with longing, eyebrows slightly raised, and the overall expression shows surrender and spiritual yearning. This is fundamental in devotional dance sequences.'
         }
@@ -1827,7 +1827,7 @@ export const techniquesData = {
           description: 'Half-sitting position - foundation of Bharatanatyam',
           images: [
             require('./assets/images/tripataka1.png'),
-            require('./assets/images/tripataka2.png'),
+            require('./assets/images/Theory/tripataka.png'),
             require('./assets/images/tripataka3.png'),
           ],
           details: 'Araimandi is the signature half-sitting position of Bharatanatyam. Knees are bent outward, feet placed apart, and the body maintains an upright posture. This position provides stability for complex footwork and is essential for executing adavus (basic steps).'
@@ -1837,9 +1837,9 @@ export const techniquesData = {
           title: 'Muzhumandi',
           description: 'Full sitting position for grounded movements',
           images: [
-            require('./assets/images/alapadma1.png'),
+            require('./assets/images/Theory/alapadma.png'),
             require('./assets/images/alapadma2.png'),
-            require('./assets/images/alapadma3.png'),
+            require('./assets/images/Theory/alapadma.png'),
           ],
           details: 'Muzhumandi is the full sitting position where the dancer sits with knees fully bent and touching the ground. This position is used for specific sequences requiring grounded movements and demonstrates flexibility and control.'
         }

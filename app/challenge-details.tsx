@@ -70,7 +70,7 @@ export default function ChallengeDetails() {
       >
         <View style={styles.card}>
           <View style={styles.cardContent}>
-            <Image source={require('@/assets/images/daily-practice.png')} style={styles.banner} resizeMode="cover" />
+            <Image source={require('@/assets/images/Theory/pataka.png')} style={styles.banner} resizeMode="cover" />
             <Text style={styles.title}>{challenge?.title || 'Challenge'}</Text>
             <Text style={styles.description}>{challenge?.description || 'Complete this challenge to earn points.'}</Text>
 
