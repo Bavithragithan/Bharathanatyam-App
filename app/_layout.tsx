@@ -30,6 +30,7 @@ export default function RootLayout() {
         <Stack.Screen name="reset-password" />
         <Stack.Screen name="otp-verification" />
         <Stack.Screen name="challenge-details" />
+        <Stack.Screen name="live-class" />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
