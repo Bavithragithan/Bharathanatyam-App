@@ -27,6 +27,8 @@ export default function ChoreographyScreen() {
   const [selectedTeacher, setSelectedTeacher] = useState<
     null | { name: string; title: string; experience: string; bio: string }
   >(null);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [currentMonth, setCurrentMonth] = useState(new Date());
   const flatListRef = useRef<FlatList<any>>(null);
   const tabClick = useRef(false);
 
@@ -73,6 +75,79 @@ export default function ChoreographyScreen() {
         'Meera emphasizes technique with expression and has mentored numerous arangetrams and solo recitals.',
     },
   ];
+
+  // Calendar helper functions
+  const getDaysInMonth = (date: Date) => {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (date: Date) => {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  };
+
+  const formatDate = (date: Date) => {
+    return date.toISOString().split('T')[0];
+  };
+
+  const isSameDate = (date1: Date, date2: Date) => {
+    return formatDate(date1) === formatDate(date2);
+  };
+
+  const isToday = (date: Date) => {
+    return isSameDate(date, new Date());
+  };
+
+  const hasClass = (date: Date) => {
+    const dayOfWeek = date.getDay();
+    return dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5; // Monday, Wednesday, Friday
+  };
+
+  const getClassForDate = (date: Date) => {
+    const dayOfWeek = date.getDay();
+    switch (dayOfWeek) {
+      case 1: return { 
+        time: '6:00 PM - 7:30 PM', 
+        class: 'Basic Adavus', 
+        teacher: 'Smt. Ananya Iyer',
+        level: 'Beginner',
+        duration: '90 min',
+        type: 'Technique',
+        description: 'Learn fundamental adavus with proper technique and rhythm.',
+        color: '#4CAF50'
+      };
+      case 3: return { 
+        time: '6:00 PM - 7:30 PM', 
+        class: 'Intermediate Adavus', 
+        teacher: 'Sri. Karthik Subramanian',
+        level: 'Intermediate',
+        duration: '90 min',
+        type: 'Choreography',
+        description: 'Build on basic techniques with complex combinations.',
+        color: '#FF9800'
+      };
+      case 5: return { 
+        time: '6:00 PM - 7:30 PM', 
+        class: 'Advanced Choreography', 
+        teacher: 'Smt. Meera Krishnan',
+        level: 'Advanced',
+        duration: '90 min',
+        type: 'Performance',
+        description: 'Master advanced choreography and expression techniques.',
+        color: '#E91E63'
+      };
+      default: return null;
+    }
+  };
+
+  const navigateMonth = (direction: 'prev' | 'next') => {
+    const newMonth = new Date(currentMonth);
+    if (direction === 'prev') {
+      newMonth.setMonth(newMonth.getMonth() - 1);
+    } else {
+      newMonth.setMonth(newMonth.getMonth() + 1);
+    }
+    setCurrentMonth(newMonth);
+  };
 
   const LiveClassesComponent = () => (
     <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
@@ -174,35 +249,191 @@ export default function ChoreographyScreen() {
     </ScrollView>
   );
 
-  const ScheduleComponent = () => (
-    <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
-      <View style={styles.scheduleCard}>
-        <Text style={styles.scheduleTitle}>Weekly Schedule</Text>
-        <View style={styles.scheduleItem}>
-          <Text style={styles.scheduleDay}>Monday</Text>
-          <Text style={styles.scheduleTime}>6:00 PM - 7:30 PM</Text>
-          <Text style={styles.scheduleClass}>Basic Adavus</Text>
-        </View>
-        <View style={styles.scheduleItem}>
-          <Text style={styles.scheduleDay}>Wednesday</Text>
-          <Text style={styles.scheduleTime}>6:00 PM - 7:30 PM</Text>
-          <Text style={styles.scheduleClass}>Intermediate Adavus</Text>
-        </View>
-        <View style={styles.scheduleItem}>
-          <Text style={styles.scheduleDay}>Friday</Text>
-          <Text style={styles.scheduleTime}>6:00 PM - 7:30 PM</Text>
-          <Text style={styles.scheduleClass}>Advanced Choreography</Text>
-        </View>
-      </View>
+  const CalendarComponent = () => {
+    const daysInMonth = getDaysInMonth(currentMonth);
+    const firstDay = getFirstDayOfMonth(currentMonth);
+    const monthName = currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    
+    const renderCalendarDays = () => {
+      const days = [];
       
-      <View style={styles.bottomSpacing} />
-    </ScrollView>
-  );
+      // Add empty cells for days before the first day of the month
+      for (let i = 0; i < firstDay; i++) {
+        days.push(<View key={`empty-${i}`} style={styles.calendarDay} />);
+      }
+      
+      // Add days of the month
+      for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+        const isSelected = isSameDate(date, selectedDate);
+        const isTodayDate = isToday(date);
+        const hasClassOnDay = hasClass(date);
+        const classInfo = getClassForDate(date);
+        
+        days.push(
+          <TouchableOpacity
+            key={day}
+            style={[
+              styles.calendarDay,
+              isSelected && styles.selectedDay,
+              isTodayDate && styles.todayDay,
+              hasClassOnDay && styles.classDay,
+            ]}
+            onPress={() => setSelectedDate(date)}
+            activeOpacity={0.7}
+          >
+            <Text style={[
+              styles.dayText,
+              isSelected && styles.selectedDayText,
+              isTodayDate && styles.todayDayText,
+              hasClassOnDay && styles.classDayText,
+            ]}>
+              {day}
+            </Text>
+            {hasClassOnDay && (
+              <View style={[
+                styles.classIndicator,
+                { backgroundColor: classInfo?.color || '#B75F37' }
+              ]} />
+            )}
+            {isTodayDate && <View style={styles.todayIndicator} />}
+          </TouchableOpacity>
+        );
+      }
+      
+      return days;
+    };
+
+    const selectedClassInfo = getClassForDate(selectedDate);
+
+    return (
+      <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
+        {/* Calendar Header */}
+        <View style={styles.calendarHeader}>
+          <TouchableOpacity onPress={() => navigateMonth('prev')} style={styles.navButton}>
+            <Ionicons name="chevron-back" size={24} color="#B75F37" />
+          </TouchableOpacity>
+          <Text style={styles.monthTitle}>{monthName}</Text>
+          <TouchableOpacity onPress={() => navigateMonth('next')} style={styles.navButton}>
+            <Ionicons name="chevron-forward" size={24} color="#B75F37" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Calendar Grid */}
+        <View style={styles.calendarCard}>
+          <View style={styles.weekDaysRow}>
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+              <Text key={day} style={styles.weekDayText}>{day}</Text>
+            ))}
+          </View>
+          <View style={styles.calendarGrid}>
+            {renderCalendarDays()}
+          </View>
+        </View>
+
+        {/* Calendar Legend */}
+        <View style={styles.legendCard}>
+          <Text style={styles.legendTitle}>Class Types</Text>
+          <View style={styles.legendItems}>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, { backgroundColor: '#4CAF50' }]} />
+              <Text style={styles.legendText}>Basic Adavus</Text>
+            </View>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, { backgroundColor: '#FF9800' }]} />
+              <Text style={styles.legendText}>Intermediate</Text>
+            </View>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, { backgroundColor: '#E91E63' }]} />
+              <Text style={styles.legendText}>Advanced</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Selected Date Info */}
+        {selectedClassInfo && (
+          <View style={styles.classInfoCard}>
+            <View style={styles.classInfoHeader}>
+              <Text style={styles.classInfoTitle}>
+                {selectedDate.toLocaleDateString('en-US', { 
+                  weekday: 'long', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </Text>
+              <View style={[styles.levelBadge, { backgroundColor: selectedClassInfo.color }]}>
+                <Text style={styles.levelBadgeText}>{selectedClassInfo.level}</Text>
+              </View>
+            </View>
+            
+            <View style={styles.classDetailsGrid}>
+              <View style={styles.classDetailItem}>
+                <Ionicons name="time-outline" size={18} color="#B75F37" />
+                <Text style={styles.classDetailLabel}>Time</Text>
+                <Text style={styles.classDetailValue}>{selectedClassInfo.time}</Text>
+              </View>
+              <View style={styles.classDetailItem}>
+                <Ionicons name="hourglass-outline" size={18} color="#B75F37" />
+                <Text style={styles.classDetailLabel}>Duration</Text>
+                <Text style={styles.classDetailValue}>{selectedClassInfo.duration}</Text>
+              </View>
+              <View style={styles.classDetailItem}>
+                <Ionicons name="book-outline" size={18} color="#B75F37" />
+                <Text style={styles.classDetailLabel}>Type</Text>
+                <Text style={styles.classDetailValue}>{selectedClassInfo.type}</Text>
+              </View>
+              <View style={styles.classDetailItem}>
+                <Ionicons name="person-outline" size={18} color="#B75F37" />
+                <Text style={styles.classDetailLabel}>Teacher</Text>
+                <Text style={styles.classDetailValue}>{selectedClassInfo.teacher}</Text>
+              </View>
+            </View>
+
+            <View style={styles.classDescription}>
+              <Text style={styles.classDescriptionText}>{selectedClassInfo.description}</Text>
+            </View>
+
+            <View style={styles.classActions}>
+              <TouchableOpacity style={[styles.joinClassButton, { backgroundColor: selectedClassInfo.color }]}>
+                <Ionicons name="videocam-outline" size={18} color="#FFFFFF" />
+                <Text style={styles.joinClassButtonText}>Join Live Class</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.reminderButton}>
+                <Ionicons name="notifications-outline" size={18} color="#B75F37" />
+                <Text style={styles.reminderButtonText}>Set Reminder</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
+        {/* No Class Selected Message */}
+        {!selectedClassInfo && (
+          <View style={styles.noClassCard}>
+            <Ionicons name="calendar-outline" size={48} color="#A47E74" />
+            <Text style={styles.noClassTitle}>No Class Scheduled</Text>
+            <Text style={styles.noClassText}>
+              {selectedDate.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                month: 'long', 
+                day: 'numeric' 
+              })}
+            </Text>
+            <Text style={styles.noClassSubtext}>
+              Tap on a day with a colored indicator to view class details
+            </Text>
+          </View>
+        )}
+
+        
+        <View style={styles.bottomSpacing} />
+      </ScrollView>
+    );
+  };
 
   const tabContent = [
     { key: 'Live Classes', component: <LiveClassesComponent /> },
     { key: 'Teachers', component: <TeachersComponent /> },
-    { key: 'Schedule', component: <ScheduleComponent /> },
+    { key: 'Schedule', component: <CalendarComponent /> },
   ];
 
   return (
@@ -557,5 +788,288 @@ const styles = StyleSheet.create({
   modalButtonsRow: {
     flexDirection: 'row',
     marginTop: 8,
+  },
+  // Calendar Styles
+  calendarHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    backgroundColor: '#FFFFFF',
+    marginTop: 15,
+    marginBottom: 10,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  navButton: {
+    padding: 8,
+  },
+  monthTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#7A4D3A',
+  },
+  calendarCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 15,
+    marginBottom: 15,
+    padding: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  weekDaysRow: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  weekDayText: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#A47E74',
+    paddingVertical: 8,
+  },
+  calendarGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  calendarDay: {
+    width: `${100/7}%`,
+    aspectRatio: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  selectedDay: {
+    backgroundColor: '#B75F37',
+    borderRadius: 20,
+  },
+  todayDay: {
+    backgroundColor: '#F7EFF1',
+    borderRadius: 20,
+  },
+  classDay: {
+    backgroundColor: '#FFF5F5',
+  },
+  dayText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#333',
+  },
+  selectedDayText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
+  todayDayText: {
+    color: '#B75F37',
+    fontWeight: '700',
+  },
+  classDayText: {
+    color: '#B75F37',
+    fontWeight: '600',
+  },
+  classIndicator: {
+    position: 'absolute',
+    bottom: 4,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  todayIndicator: {
+    position: 'absolute',
+    top: 2,
+    right: 2,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#B75F37',
+  },
+  classInfoCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 15,
+    marginBottom: 15,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  classInfoTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#7A4D3A',
+    marginBottom: 15,
+  },
+  classInfoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  classInfoText: {
+    fontSize: 14,
+    color: '#666',
+    marginLeft: 8,
+  },
+  joinClassButton: {
+    backgroundColor: '#B75F37',
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  joinClassButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: 8,
+  },
+  // Enhanced Calendar Styles
+  classInfoHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  levelBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  levelBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  classDetailsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 15,
+  },
+  classDetailItem: {
+    width: '50%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  classDetailLabel: {
+    fontSize: 12,
+    color: '#A47E74',
+    marginLeft: 8,
+    marginRight: 8,
+    minWidth: 60,
+  },
+  classDetailValue: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '600',
+    flex: 1,
+  },
+  classDescription: {
+    backgroundColor: '#F7EFF1',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 15,
+  },
+  classDescriptionText: {
+    fontSize: 13,
+    color: '#666',
+    lineHeight: 18,
+    fontStyle: 'italic',
+  },
+  classActions: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  reminderButton: {
+    flex: 1,
+    backgroundColor: '#F7EFF1',
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  reminderButtonText: {
+    color: '#B75F37',
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: 8,
+  },
+  // Legend Styles
+  legendCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 15,
+    marginBottom: 15,
+    padding: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  legendTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#7A4D3A',
+    marginBottom: 10,
+  },
+  legendItems: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  legendDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: 6,
+  },
+  legendText: {
+    fontSize: 12,
+    color: '#666',
+    fontWeight: '500',
+  },
+  // No Class Styles
+  noClassCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 15,
+    marginBottom: 15,
+    padding: 30,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  noClassTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#7A4D3A',
+    marginTop: 15,
+    marginBottom: 8,
+  },
+  noClassText: {
+    fontSize: 16,
+    color: '#A47E74',
+    marginBottom: 8,
+  },
+  noClassSubtext: {
+    fontSize: 13,
+    color: '#999',
+    textAlign: 'center',
+    lineHeight: 18,
   },
 });

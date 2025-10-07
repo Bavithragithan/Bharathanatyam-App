@@ -10,6 +10,7 @@ export default function LiveClassScreen() {
     experience?: string;
   }>();
 
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerRow}>
@@ -39,9 +40,6 @@ export default function LiveClassScreen() {
           <Text style={styles.primaryBtnText}>Join via Zoom</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity activeOpacity={0.85} style={styles.secondaryBtn}>
-          <Text style={styles.secondaryBtnText}>Add to Calendar</Text>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -115,17 +113,6 @@ const styles = StyleSheet.create({
   },
   primaryBtnText: {
     color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  secondaryBtn: {
-    backgroundColor: '#EFE3E5',
-    paddingVertical: 12,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  secondaryBtnText: {
-    color: '#B75F37',
     fontSize: 16,
     fontWeight: '700',
   },
