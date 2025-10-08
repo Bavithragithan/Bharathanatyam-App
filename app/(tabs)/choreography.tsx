@@ -5,6 +5,7 @@ import {
   Dimensions,
   FlatList,
   Modal,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,7 +13,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../../components/ui/Header';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -526,6 +526,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FDF2F8',
+    paddingTop: 20,
   },
   tabsContainer: {
     flexDirection: 'row',
