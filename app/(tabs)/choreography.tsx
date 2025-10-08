@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import {
+  Alert,
   Dimensions,
   FlatList,
   Modal,
@@ -23,12 +24,15 @@ export default function ChoreographyScreen() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('Live Classes');
   const [isAboutVisible, setIsAboutVisible] = useState(false);
+  const [isReminderVisible, setIsReminderVisible] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [selectedTeacher, setSelectedTeacher] = useState<
     null | { name: string; title: string; experience: string; bio: string }
   >(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [reminderTime, setReminderTime] = useState('15'); // minutes before class
+  const [reminderNote, setReminderNote] = useState('');
   const flatListRef = useRef<FlatList<any>>(null);
   const tabClick = useRef(false);
 
@@ -147,6 +151,29 @@ export default function ChoreographyScreen() {
       newMonth.setMonth(newMonth.getMonth() + 1);
     }
     setCurrentMonth(newMonth);
+  };
+
+  const handleSetReminder = () => {
+    setIsReminderVisible(true);
+  };
+
+  const handleSaveReminder = () => {
+    const selectedClassInfo = getClassForDate(selectedDate);
+    if (selectedClassInfo) {
+      Alert.alert(
+        'Reminder Set!',
+        `You'll be reminded ${reminderTime} minutes before your ${selectedClassInfo.class} class on ${selectedDate.toLocaleDateString()}.`,
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              setIsReminderVisible(false);
+              setReminderNote('');
+            }
+          }
+        ]
+      );
+    }
   };
 
   const LiveClassesComponent = () => (
@@ -368,22 +395,22 @@ export default function ChoreographyScreen() {
             
             <View style={styles.classDetailsGrid}>
               <View style={styles.classDetailItem}>
-                <Ionicons name="time-outline" size={18} color="#B75F37" />
+                <Ionicons name="time-outline" size={18} color="#B75F37" style={styles.detailIcon} />
                 <Text style={styles.classDetailLabel}>Time</Text>
                 <Text style={styles.classDetailValue}>{selectedClassInfo.time}</Text>
               </View>
               <View style={styles.classDetailItem}>
-                <Ionicons name="hourglass-outline" size={18} color="#B75F37" />
+                <Ionicons name="hourglass-outline" size={18} color="#B75F37" style={styles.detailIcon} />
                 <Text style={styles.classDetailLabel}>Duration</Text>
                 <Text style={styles.classDetailValue}>{selectedClassInfo.duration}</Text>
               </View>
               <View style={styles.classDetailItem}>
-                <Ionicons name="book-outline" size={18} color="#B75F37" />
+                <Ionicons name="book-outline" size={18} color="#B75F37" style={styles.detailIcon} />
                 <Text style={styles.classDetailLabel}>Type</Text>
                 <Text style={styles.classDetailValue}>{selectedClassInfo.type}</Text>
               </View>
               <View style={styles.classDetailItem}>
-                <Ionicons name="person-outline" size={18} color="#B75F37" />
+                <Ionicons name="person-outline" size={18} color="#B75F37" style={styles.detailIcon} />
                 <Text style={styles.classDetailLabel}>Teacher</Text>
                 <Text style={styles.classDetailValue}>{selectedClassInfo.teacher}</Text>
               </View>
@@ -398,7 +425,7 @@ export default function ChoreographyScreen() {
                 <Ionicons name="videocam-outline" size={18} color="#FFFFFF" />
                 <Text style={styles.joinClassButtonText}>Join Live Class</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.reminderButton}>
+              <TouchableOpacity style={styles.reminderButton} onPress={handleSetReminder}>
                 <Ionicons name="notifications-outline" size={18} color="#B75F37" />
                 <Text style={styles.reminderButtonText}>Set Reminder</Text>
               </TouchableOpacity>
@@ -513,6 +540,91 @@ export default function ChoreographyScreen() {
                 }}
               >
                 <Text style={styles.joinButtonText}>View Live Class</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Reminder Modal */}
+      <Modal
+        visible={isReminderVisible}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setIsReminderVisible(false)}
+      >
+        <View style={styles.modalBackdrop}>
+          <View style={styles.reminderModalCard}>
+            <View style={styles.reminderModalHeader}>
+              <Ionicons name="notifications" size={24} color="#B75F37" />
+              <Text style={styles.reminderModalTitle}>Set Class Reminder</Text>
+            </View>
+            
+            {(() => {
+              const classInfo = getClassForDate(selectedDate);
+              return classInfo && (
+                <View style={styles.reminderClassInfo}>
+                  <Text style={styles.reminderClassName}>{classInfo.class}</Text>
+                  <Text style={styles.reminderClassTime}>
+                    {selectedDate.toLocaleDateString('en-US', { 
+                      weekday: 'long', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })} at {classInfo.time}
+                  </Text>
+                </View>
+              );
+            })()}
+
+            <View style={styles.reminderOptions}>
+              <Text style={styles.reminderLabel}>Remind me:</Text>
+              <View style={styles.reminderTimeOptions}>
+                {['5', '15', '30', '60'].map((minutes) => (
+                  <TouchableOpacity
+                    key={minutes}
+                    style={[
+                      styles.reminderTimeOption,
+                      reminderTime === minutes && styles.reminderTimeOptionSelected
+                    ]}
+                    onPress={() => setReminderTime(minutes)}
+                  >
+                    <Text style={[
+                      styles.reminderTimeOptionText,
+                      reminderTime === minutes && styles.reminderTimeOptionTextSelected
+                    ]}>
+                      {minutes} min
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            <View style={styles.reminderNoteSection}>
+              <Text style={styles.reminderLabel}>Note (optional):</Text>
+              <TextInput
+                style={styles.reminderNoteInput}
+                placeholder="Add a personal note..."
+                placeholderTextColor="#A47E74"
+                value={reminderNote}
+                onChangeText={setReminderNote}
+                multiline
+                numberOfLines={3}
+              />
+            </View>
+
+            <View style={styles.reminderModalButtons}>
+              <TouchableOpacity
+                style={styles.reminderCancelButton}
+                onPress={() => setIsReminderVisible(false)}
+              >
+                <Text style={styles.reminderCancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.reminderSaveButton}
+                onPress={handleSaveReminder}
+              >
+                <Ionicons name="checkmark" size={18} color="#FFFFFF" />
+                <Text style={styles.reminderSaveButtonText}>Set Reminder</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -811,15 +923,16 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   monthTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
     color: '#7A4D3A',
+    letterSpacing: 0.5,
   },
   calendarCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 15,
     marginBottom: 15,
-    padding: 15,
+    padding: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -829,25 +942,32 @@ const styles = StyleSheet.create({
   weekDaysRow: {
     flexDirection: 'row',
     marginBottom: 10,
+    justifyContent: 'space-between',
   },
   weekDayText: {
-    flex: 1,
+    width: '14.28%',
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '600',
     color: '#A47E74',
-    paddingVertical: 8,
+    paddingVertical: 10,
+    letterSpacing: 0.5,
   },
   calendarGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   calendarDay: {
-    width: `${100/7}%`,
+    width: '14.28%',
     aspectRatio: 1,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
+    marginBottom: 8,
+    paddingVertical: 4,
+    minHeight: 40,
   },
   selectedDay: {
     backgroundColor: '#B75F37',
@@ -861,21 +981,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF5F5',
   },
   dayText: {
-    fontSize: 14,
-    fontWeight: '500',
+    fontSize: 15,
+    fontWeight: '600',
     color: '#333',
+    textAlign: 'center',
+    lineHeight: 18,
   },
   selectedDayText: {
     color: '#FFFFFF',
     fontWeight: '700',
+    fontSize: 15,
   },
   todayDayText: {
     color: '#B75F37',
     fontWeight: '700',
+    fontSize: 15,
   },
   classDayText: {
     color: '#B75F37',
     fontWeight: '600',
+    fontSize: 15,
   },
   classIndicator: {
     position: 'absolute',
@@ -905,10 +1030,12 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   classInfoTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '700',
     color: '#7A4D3A',
-    marginBottom: 15,
+    marginBottom: 18,
+    letterSpacing: 0.3,
+    lineHeight: 22,
   },
   classInfoRow: {
     flexDirection: 'row',
@@ -921,11 +1048,15 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   joinClassButton: {
+    flex: screenWidth < 400 ? 0 : 1,
     backgroundColor: '#B75F37',
     paddingVertical: 12,
+    paddingHorizontal: screenWidth < 400 ? 20 : 0,
     borderRadius: 10,
     alignItems: 'center',
-    marginTop: 15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: screenWidth < 400 ? '100%' : 'auto',
   },
   joinClassButtonText: {
     color: '#FFFFFF',
@@ -954,25 +1085,40 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginBottom: 15,
+    justifyContent: 'space-between',
+    gap: 8,
   },
   classDetailItem: {
-    width: '50%',
+    width: screenWidth < 400 ? '100%' : '48%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 6,
+    minHeight: 44,
   },
   classDetailLabel: {
-    fontSize: 12,
+    fontSize: screenWidth < 400 ? 12 : 13,
     color: '#A47E74',
     marginLeft: 8,
     marginRight: 8,
-    minWidth: 60,
+    minWidth: screenWidth < 400 ? 60 : 70,
+    fontWeight: '500',
+    textAlign: 'left',
+    flexShrink: 0,
   },
   classDetailValue: {
-    fontSize: 14,
+    fontSize: screenWidth < 400 ? 13 : 14,
     color: '#333',
     fontWeight: '600',
     flex: 1,
+    lineHeight: screenWidth < 400 ? 16 : 18,
+    textAlign: 'left',
+    flexShrink: 1,
+  },
+  detailIcon: {
+    marginRight: 6,
+    flexShrink: 0,
   },
   classDescription: {
     backgroundColor: '#F7EFF1',
@@ -981,23 +1127,27 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   classDescriptionText: {
-    fontSize: 13,
+    fontSize: 14,
     color: '#666',
-    lineHeight: 18,
+    lineHeight: 20,
     fontStyle: 'italic',
+    letterSpacing: 0.2,
   },
   classActions: {
-    flexDirection: 'row',
-    gap: 10,
+    flexDirection: screenWidth < 400 ? 'column' : 'row',
+    gap: 12,
+    alignItems: 'center',
   },
   reminderButton: {
-    flex: 1,
+    flex: screenWidth < 400 ? 0 : 1,
     backgroundColor: '#F7EFF1',
     paddingVertical: 12,
+    paddingHorizontal: screenWidth < 400 ? 20 : 0,
     borderRadius: 10,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
+    width: screenWidth < 400 ? '100%' : 'auto',
   },
   reminderButtonText: {
     color: '#B75F37',
@@ -1018,18 +1168,23 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   legendTitle: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '700',
     color: '#7A4D3A',
-    marginBottom: 10,
+    marginBottom: 12,
+    letterSpacing: 0.3,
   },
   legendItems: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
   },
   legendItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
   legendDot: {
     width: 8,
@@ -1038,9 +1193,10 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   legendText: {
-    fontSize: 12,
+    fontSize: 13,
     color: '#666',
     fontWeight: '500',
+    letterSpacing: 0.2,
   },
   // No Class Styles
   noClassCard: {
@@ -1056,21 +1212,148 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   noClassTitle: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: '700',
     color: '#7A4D3A',
     marginTop: 15,
-    marginBottom: 8,
+    marginBottom: 10,
+    letterSpacing: 0.3,
   },
   noClassText: {
-    fontSize: 16,
+    fontSize: 17,
     color: '#A47E74',
-    marginBottom: 8,
+    marginBottom: 10,
+    fontWeight: '500',
   },
   noClassSubtext: {
-    fontSize: 13,
+    fontSize: 14,
     color: '#999',
     textAlign: 'center',
-    lineHeight: 18,
+    lineHeight: 20,
+    letterSpacing: 0.2,
+  },
+  // Reminder Modal Styles
+  reminderModalCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 24,
+    width: '100%',
+    maxWidth: 400,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  reminderModalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  reminderModalTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#7A4D3A',
+    marginLeft: 12,
+    letterSpacing: 0.3,
+  },
+  reminderClassInfo: {
+    backgroundColor: '#F7EFF1',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 20,
+  },
+  reminderClassName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 4,
+  },
+  reminderClassTime: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '500',
+  },
+  reminderOptions: {
+    marginBottom: 20,
+  },
+  reminderLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#7A4D3A',
+    marginBottom: 12,
+  },
+  reminderTimeOptions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  reminderTimeOption: {
+    flex: 1,
+    backgroundColor: '#F7EFF1',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  reminderTimeOptionSelected: {
+    backgroundColor: '#B75F37',
+    borderColor: '#B75F37',
+  },
+  reminderTimeOptionText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#A47E74',
+  },
+  reminderTimeOptionTextSelected: {
+    color: '#FFFFFF',
+  },
+  reminderNoteSection: {
+    marginBottom: 24,
+  },
+  reminderNoteInput: {
+    backgroundColor: '#F7EFF1',
+    borderRadius: 10,
+    padding: 12,
+    fontSize: 14,
+    color: '#333',
+    textAlignVertical: 'top',
+    borderWidth: 1,
+    borderColor: '#E5D6D8',
+  },
+  reminderModalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  reminderCancelButton: {
+    flex: 1,
+    backgroundColor: '#F7EFF1',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E5D6D8',
+  },
+  reminderCancelButtonText: {
+    color: '#A47E74',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  reminderSaveButton: {
+    flex: 1,
+    backgroundColor: '#B75F37',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  reminderSaveButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: 6,
   },
 });
