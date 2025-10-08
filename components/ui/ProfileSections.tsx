@@ -99,6 +99,19 @@ export const ProfileSection = ({ onBack }: SectionProps) => {
 
 export const EnrolledCoursesSection = ({ onBack }: SectionProps) => {
   const enrolledCourses = enrolledCoursesData;
+  const [expandedCourses, setExpandedCourses] = React.useState<Set<string>>(new Set());
+
+  const toggleCourseContent = (courseId: string) => {
+    setExpandedCourses(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(courseId)) {
+        newSet.delete(courseId);
+      } else {
+        newSet.add(courseId);
+      }
+      return newSet;
+    });
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -126,35 +139,6 @@ export const EnrolledCoursesSection = ({ onBack }: SectionProps) => {
     }
   };
 
-  const getPaymentStatusColor = (paymentStatus: string) => {
-    switch (paymentStatus) {
-      case 'Paid':
-        return '#4CAF50';
-      case 'Payment Due':
-        return '#FF5722';
-      case 'Overdue':
-        return '#F44336';
-      case 'Refunded':
-        return '#9C27B0';
-      default:
-        return '#666';
-    }
-  };
-
-  const getPaymentStatusIcon = (paymentStatus: string) => {
-    switch (paymentStatus) {
-      case 'Paid':
-        return 'checkmark-circle';
-      case 'Payment Due':
-        return 'alert-circle';
-      case 'Overdue':
-        return 'warning';
-      case 'Refunded':
-        return 'refresh-circle';
-      default:
-        return 'help-circle';
-    }
-  };
 
   return (
     <View style={styles.sectionContainer}>
@@ -192,24 +176,21 @@ export const EnrolledCoursesSection = ({ onBack }: SectionProps) => {
             </View>
           </View>
           
-          <View style={styles.paymentStatsRow}>
-            <View style={styles.paymentStatItem}>
-              <Ionicons name="card-outline" size={20} color="#4CAF50" />
-              <Text style={styles.paymentStatNumber}>3</Text>
-              <Text style={styles.paymentStatLabel}>Paid</Text>
+          <View style={styles.courseContentStatsRow}>
+            <View style={styles.courseContentStatItem}>
+              <Ionicons name="library-outline" size={20} color="#7A4D3A" />
+              <Text style={styles.courseContentStatNumber}>24</Text>
+              <Text style={styles.courseContentStatLabel}>Lessons</Text>
             </View>
-            <View style={styles.paymentStatItem}>
-              <Ionicons name="alert-circle-outline" size={20} color="#FF5722" />
-              <Text style={styles.paymentStatNumber}>1</Text>
-              <Text style={styles.paymentStatLabel}>Due</Text>
+            <View style={styles.courseContentStatItem}>
+              <Ionicons name="time-outline" size={20} color="#2196F3" />
+              <Text style={styles.courseContentStatNumber}>12</Text>
+              <Text style={styles.courseContentStatLabel}>Hours</Text>
             </View>
-          </View>
-          
-          <View style={styles.totalSpentRow}>
-            <View style={styles.totalSpentItem}>
-              <Ionicons name="wallet-outline" size={20} color="#7A4D3A" />
-              <Text style={styles.totalSpentNumber}>LKR 366,720</Text>
-              <Text style={styles.totalSpentLabel}>Total Spent</Text>
+            <View style={styles.courseContentStatItem}>
+              <Ionicons name="trophy-outline" size={20} color="#FF9800" />
+              <Text style={styles.courseContentStatNumber}>5</Text>
+              <Text style={styles.courseContentStatLabel}>Certificates</Text>
             </View>
           </View>
         </View>
@@ -266,56 +247,82 @@ export const EnrolledCoursesSection = ({ onBack }: SectionProps) => {
                 )}
               </View>
 
-              {/* Payment Information */}
-              <View style={styles.paymentInfo}>
-                <View style={styles.paymentHeader}>
-                  <View style={styles.paymentStatusContainer}>
+              {/* Course Content Information */}
+              <View style={styles.courseContentInfo}>
+                <View style={styles.courseContentHeader}>
+                  <Text style={styles.courseContentTitle}>Course Content</Text>
+                  <TouchableOpacity 
+                    style={styles.courseContentDropdown}
+                    onPress={() => toggleCourseContent(course.id.toString())}
+                  >
                     <Ionicons 
-                      name={getPaymentStatusIcon(course.paymentStatus) as any} 
-                      size={16} 
-                      color={getPaymentStatusColor(course.paymentStatus)} 
+                      name={expandedCourses.has(course.id.toString()) ? "chevron-up" : "chevron-down"} 
+                      size={20} 
+                      color="#7A4D3A" 
                     />
-                    <Text style={[styles.paymentStatus, { color: getPaymentStatusColor(course.paymentStatus) }]}>
-                      {course.paymentStatus}
-                    </Text>
-                  </View>
-                  <Text style={styles.paymentAmount}>{course.amount}</Text>
+                  </TouchableOpacity>
                 </View>
                 
-                {course.paymentStatus === 'Paid' && course.paymentDate && (
-                  <View style={styles.paymentDetails}>
-                    <Text style={styles.paymentDetailText}>
-                      Paid on {course.paymentDate} via {course.paymentMethod}
-                    </Text>
-                  </View>
-                )}
-                
-                {course.paymentStatus === 'Payment Due' && course.dueDate && (
-                  <View style={styles.paymentDetails}>
-                    <Text style={[styles.paymentDetailText, styles.paymentDueText]}>
-                      Due on {course.dueDate}
-                    </Text>
-                  </View>
+                {expandedCourses.has(course.id.toString()) && (
+                  <>
+                    <View style={styles.courseContentList}>
+                      <View style={styles.courseContentItem}>
+                        <Ionicons name="play-circle-outline" size={16} color="#7A4D3A" />
+                        <Text style={styles.courseContentText}>Basic Adavus (8 lessons)</Text>
+                      </View>
+                      <View style={styles.courseContentItem}>
+                        <Ionicons name="play-circle-outline" size={16} color="#7A4D3A" />
+                        <Text style={styles.courseContentText}>Hand Gestures (6 lessons)</Text>
+                      </View>
+                      <View style={styles.courseContentItem}>
+                        <Ionicons name="play-circle-outline" size={16} color="#7A4D3A" />
+                        <Text style={styles.courseContentText}>Basic Theory (4 lessons)</Text>
+                      </View>
+                      <View style={styles.courseContentItem}>
+                        <Ionicons name="play-circle-outline" size={16} color="#7A4D3A" />
+                        <Text style={styles.courseContentText}>Practice Sessions (6 lessons)</Text>
+                      </View>
+                    </View>
+                    
+                    <View style={styles.courseContentStats}>
+                      <View style={styles.courseContentStat}>
+                        <Ionicons name="library-outline" size={14} color="#666" />
+                        <Text style={styles.courseContentStatText}>24 Lessons</Text>
+                      </View>
+                      <View style={styles.courseContentStat}>
+                        <Ionicons name="time-outline" size={14} color="#666" />
+                        <Text style={styles.courseContentStatText}>12 Hours</Text>
+                      </View>
+                      <View style={styles.courseContentStat}>
+                        <Ionicons name="trophy-outline" size={14} color="#666" />
+                        <Text style={styles.courseContentStatText}>Certificate</Text>
+                      </View>
+                    </View>
+                  </>
                 )}
               </View>
 
               <View style={styles.courseActions}>
-                <TouchableOpacity style={styles.courseActionButton}>
-                  <Ionicons name="play-outline" size={16} color="#7A4D3A" />
-                  <Text style={styles.courseActionText}>Continue</Text>
-                </TouchableOpacity>
+                {/* First Row - Continue Learning */}
+                <View style={styles.courseActionRow}>
+                  <TouchableOpacity style={[styles.courseActionButton, styles.continueLearningButton]}>
+                    <Ionicons name="play-outline" size={16} color="#FFFFFF" />
+                    <Text style={[styles.courseActionText, styles.continueLearningText]}>Continue Learning</Text>
+                  </TouchableOpacity>
+                </View>
                 
-                {course.paymentStatus === 'Payment Due' ? (
-                  <TouchableOpacity style={[styles.courseActionButton, styles.payNowButton]}>
-                    <Ionicons name="card-outline" size={16} color="#FFFFFF" />
-                    <Text style={[styles.courseActionText, styles.payNowText]}>Pay Now</Text>
-                  </TouchableOpacity>
-                ) : (
+                {/* Second Row - View Content and Resources */}
+                <View style={styles.courseActionRow}>
                   <TouchableOpacity style={styles.courseActionButton}>
-                    <Ionicons name="receipt-outline" size={16} color="#7A4D3A" />
-                    <Text style={styles.courseActionText}>Invoice</Text>
+                    <Ionicons name="library-outline" size={16} color="#7A4D3A" />
+                    <Text style={styles.courseActionText}>View Content</Text>
                   </TouchableOpacity>
-                )}
+                  
+                  <TouchableOpacity style={styles.courseActionButton}>
+                    <Ionicons name="download-outline" size={16} color="#7A4D3A" />
+                    <Text style={styles.courseActionText}>Resources</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           ))}
@@ -333,6 +340,231 @@ export const EnrolledCoursesSection = ({ onBack }: SectionProps) => {
             </TouchableOpacity>
           </View>
         )}
+      </ScrollView>
+    </View>
+  );
+};
+
+export const PaymentsSection = ({ onBack }: SectionProps) => {
+  // Sample payment data
+  const paymentHistory = [
+    {
+      id: '1',
+      courseName: 'Bharatanatyam Fundamentals',
+      amount: 'LKR 45,000',
+      date: '2024-01-15',
+      status: 'Paid',
+      method: 'Credit Card',
+      transactionId: 'TXN-2024-001',
+      invoiceUrl: '#'
+    },
+    {
+      id: '2',
+      courseName: 'Advanced Adavus',
+      amount: 'LKR 65,000',
+      date: '2024-02-20',
+      status: 'Paid',
+      method: 'Bank Transfer',
+      transactionId: 'TXN-2024-002',
+      invoiceUrl: '#'
+    },
+    {
+      id: '3',
+      courseName: 'Varnam Masterclass',
+      amount: 'LKR 85,000',
+      date: '2024-03-10',
+      status: 'Paid',
+      method: 'PayPal',
+      transactionId: 'TXN-2024-003',
+      invoiceUrl: '#'
+    },
+    {
+      id: '4',
+      courseName: 'Thillana Workshop',
+      amount: 'LKR 35,000',
+      date: '2024-04-05',
+      status: 'Paid',
+      method: 'Credit Card',
+      transactionId: 'TXN-2024-004',
+      invoiceUrl: '#'
+    },
+    {
+      id: '5',
+      courseName: 'Margam Intensive',
+      amount: 'LKR 120,000',
+      date: '2024-05-12',
+      status: 'Paid',
+      method: 'Bank Transfer',
+      transactionId: 'TXN-2024-005',
+      invoiceUrl: '#'
+    }
+  ];
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Paid':
+        return '#4CAF50';
+      case 'Pending':
+        return '#FF9800';
+      case 'Failed':
+        return '#F44336';
+      case 'Refunded':
+        return '#9C27B0';
+      default:
+        return '#666';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'Paid':
+        return 'checkmark-circle';
+      case 'Pending':
+        return 'time';
+      case 'Failed':
+        return 'close-circle';
+      case 'Refunded':
+        return 'refresh-circle';
+      default:
+        return 'help-circle';
+    }
+  };
+
+  const getMethodIcon = (method: string) => {
+    switch (method) {
+      case 'Credit Card':
+        return 'card';
+      case 'Bank Transfer':
+        return 'business';
+      case 'PayPal':
+        return 'logo-paypal';
+      case 'Cash':
+        return 'cash';
+      default:
+        return 'card-outline';
+    }
+  };
+
+  const totalSpent = paymentHistory.reduce((sum, payment) => {
+    return sum + parseInt(payment.amount.replace(/[^\d]/g, ''));
+  }, 0);
+
+  const formatCurrency = (amount: number) => {
+    return `LKR ${amount.toLocaleString()}`;
+  };
+
+  return (
+    <View style={styles.sectionContainer}>
+      <View style={styles.sectionHeader}>
+        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#7A4D3A" />
+        </TouchableOpacity>
+        <Text style={styles.sectionTitle}>Payments</Text>
+        <View style={styles.placeholder} />
+      </View>
+
+      <ScrollView
+        style={styles.scrollableContent}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        bounces={true}
+        scrollEventThrottle={16}
+        keyboardShouldPersistTaps="handled"
+        nestedScrollEnabled={true}
+      >
+        <View style={styles.paymentSummaryCard}>
+          <Text style={styles.paymentSummaryTitle}>Payment Summary</Text>
+          
+          <View style={styles.paymentSummaryRow}>
+            <View style={styles.paymentSummaryItem}>
+              <Ionicons name="checkmark-circle-outline" size={24} color="#2196F3" />
+              <View style={styles.paymentSummaryInfo}>
+                <Text style={styles.paymentSummaryLabel}>Successful</Text>
+                <Text style={styles.paymentSummaryValue}>
+                  {paymentHistory.filter(p => p.status === 'Paid').length}
+                </Text>
+              </View>
+            </View>
+            
+            <View style={styles.paymentSummaryItem}>
+              <Ionicons name="receipt-outline" size={24} color="#4CAF50" />
+              <View style={styles.paymentSummaryInfo}>
+                <Text style={styles.paymentSummaryLabel}>Total Payments</Text>
+                <Text style={styles.paymentSummaryValue}>{paymentHistory.length}</Text>
+              </View>
+            </View>
+          </View>
+          
+          <View style={styles.paymentSummaryRow}>
+            <View style={styles.paymentSummaryItem}>
+              <Ionicons name="wallet-outline" size={24} color="#7A4D3A" />
+              <View style={styles.paymentSummaryInfo}>
+                <Text style={styles.paymentSummaryLabel}>Total Spent</Text>
+                <Text style={styles.paymentSummaryValue}>{formatCurrency(totalSpent)}</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.addPaymentContainer}>
+          <TouchableOpacity style={styles.addPaymentButton}>
+            <Ionicons name="add-circle-outline" size={24} color="#FFFFFF" />
+            <Text style={styles.addPaymentButtonText}>Add New Payment</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.paymentHistoryContainer}>
+          <Text style={styles.paymentHistoryTitle}>Payment History</Text>
+          
+          {paymentHistory.map((payment, index) => (
+            <View key={payment.id} style={[styles.paymentCard, { marginTop: index === 0 ? 0 : 12 }]}>
+              <View style={styles.paymentCardHeader}>
+                <View style={styles.paymentCardInfo}>
+                  <Text style={styles.paymentCourseName}>{payment.courseName}</Text>
+                  <Text style={styles.paymentDate}>{payment.date}</Text>
+                </View>
+                <View style={styles.paymentAmountContainer}>
+                  <Text style={styles.paymentAmount}>{payment.amount}</Text>
+                  <View style={styles.paymentCardStatusContainer}>
+                    <Ionicons 
+                      name={getStatusIcon(payment.status) as any} 
+                      size={16} 
+                      color={getStatusColor(payment.status)} 
+                    />
+                    <Text style={[styles.paymentCardStatus, { color: getStatusColor(payment.status) }]}>
+                      {payment.status}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              
+              <View style={styles.paymentCardDetails}>
+                <View style={styles.paymentCardDetailRow}>
+                  <Ionicons name={getMethodIcon(payment.method) as any} size={16} color="#7A4D3A" />
+                  <Text style={styles.paymentCardDetailText}>Paid via {payment.method}</Text>
+                </View>
+                
+                <View style={styles.paymentCardDetailRow}>
+                  <Ionicons name="receipt-outline" size={16} color="#7A4D3A" />
+                  <Text style={styles.paymentCardDetailText}>Transaction ID: {payment.transactionId}</Text>
+                </View>
+              </View>
+              
+              <View style={styles.paymentActions}>
+                <TouchableOpacity style={styles.paymentActionButton}>
+                  <Ionicons name="download-outline" size={16} color="#7A4D3A" />
+                  <Text style={styles.paymentActionText}>Download Receipt</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.paymentActionButton}>
+                  <Ionicons name="eye-outline" size={16} color="#7A4D3A" />
+                  <Text style={styles.paymentActionText}>View Invoice</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
+        </View>
+        
       </ScrollView>
     </View>
   );
@@ -1861,25 +2093,41 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   courseActions: {
+    flexDirection: 'column',
+    gap: 8,
+  },
+  courseActionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 12,
+    gap: 8,
   },
   courseActionButton: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F8F9FA',
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 12,
     borderRadius: 8,
     flex: 1,
-    marginHorizontal: 4,
+    marginHorizontal: 0,
     justifyContent: 'center',
+    minHeight: 44,
   },
   courseActionText: {
     fontSize: 14,
     fontWeight: '600',
     color: '#7A4D3A',
     marginLeft: 6,
+  },
+  continueLearningButton: {
+    backgroundColor: '#7A4D3A',
+    flex: 1,
+    marginHorizontal: 0,
+  },
+  continueLearningText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
   },
   emptyState: {
     alignItems: 'center',
@@ -1911,7 +2159,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#FFFFFF',
   },
-  // Payment Information Styles
   paymentStatsRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -2001,5 +2248,268 @@ const styles = StyleSheet.create({
   },
   payNowText: {
     color: '#FFFFFF',
+  },
+  // Payment Section Styles
+  paymentSummaryCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    marginHorizontal: 20,
+    marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  paymentSummaryTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#7A4D3A',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  paymentSummaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 16,
+  },
+  paymentSummaryItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  paymentSummaryInfo: {
+    marginLeft: 8,
+  },
+  paymentSummaryLabel: {
+    fontSize: 12,
+    color: '#666',
+    fontWeight: '500',
+  },
+  paymentSummaryValue: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#7A4D3A',
+    marginTop: 2,
+  },
+  paymentHistoryContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  paymentHistoryTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#7A4D3A',
+    marginBottom: 16,
+  },
+  paymentCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  paymentCardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  paymentCardInfo: {
+    flex: 1,
+  },
+  paymentCourseName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 4,
+  },
+  paymentDate: {
+    fontSize: 12,
+    color: '#666',
+  },
+  paymentAmountContainer: {
+    alignItems: 'flex-end',
+  },
+  paymentCardStatusContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  paymentCardStatus: {
+    fontSize: 12,
+    fontWeight: '600',
+    marginLeft: 4,
+  },
+  paymentCardDetails: {
+    marginBottom: 12,
+  },
+  paymentCardDetailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  paymentCardDetailText: {
+    fontSize: 12,
+    color: '#666',
+    marginLeft: 8,
+  },
+  paymentActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  paymentActionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: '#F8F9FA',
+    borderRadius: 8,
+    flex: 1,
+    marginHorizontal: 4,
+    justifyContent: 'center',
+  },
+  paymentActionText: {
+    fontSize: 12,
+    color: '#7A4D3A',
+    fontWeight: '600',
+    marginLeft: 4,
+  },
+  paymentQuickActions: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  quickActionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: '#F8F9FA',
+    borderRadius: 12,
+    flex: 1,
+    marginHorizontal: 4,
+    justifyContent: 'center',
+  },
+  quickActionText: {
+    fontSize: 14,
+    color: '#7A4D3A',
+    fontWeight: '600',
+    marginLeft: 6,
+  },
+  // Course Content Styles
+  courseContentStatsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+  },
+  courseContentStatItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  courseContentStatNumber: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#7A4D3A',
+    marginLeft: 6,
+  },
+  courseContentStatLabel: {
+    fontSize: 12,
+    color: '#666',
+    marginLeft: 4,
+    fontWeight: '600',
+  },
+  courseContentInfo: {
+    backgroundColor: '#F8F9FA',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+  },
+  courseContentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  courseContentTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#7A4D3A',
+  },
+  courseContentDropdown: {
+    padding: 4,
+    borderRadius: 6,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  courseContentList: {
+    marginBottom: 12,
+  },
+  courseContentItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  courseContentText: {
+    fontSize: 14,
+    color: '#333',
+    marginLeft: 8,
+    fontWeight: '500',
+  },
+  courseContentStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#E0E0E0',
+  },
+  courseContentStat: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  courseContentStatText: {
+    fontSize: 12,
+    color: '#666',
+    marginLeft: 4,
+    fontWeight: '500',
+  },
+  // Add Payment Button Styles
+  addPaymentContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  addPaymentButton: {
+    backgroundColor: '#7A4D3A',
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  addPaymentButtonText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginLeft: 8,
   },
 });
