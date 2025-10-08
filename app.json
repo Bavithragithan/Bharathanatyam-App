@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "bharatanatyam",
-    "slug": "bharatanatyam-t5kxcghldbedsmtkb828i",
+    "slug": "bharatanatyam",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -50,7 +50,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "e4f3da5e-b163-4ba9-900a-5cef530b9000"
+        "projectId": "3e6ffff4-2074-4eb1-a8fd-1fe1f40294ea"
       }
     },
     "owner": "skbavi"

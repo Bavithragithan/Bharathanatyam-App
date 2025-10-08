@@ -3,18 +3,18 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import {
-    Alert,
-    Animated,
-    Dimensions,
-    Modal,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View,
+  Alert,
+  Animated,
+  Dimensions,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import { AboutSection, ChangePasswordSection, CookiePolicySection, EditProfileSection, EnrolledCoursesSection, HelpSection, PrivacyPolicySection, PrivacySettingsSection, ProfileSection, SettingsSection, TermsSection } from './ProfileSections';
+import { AboutSection, ChangePasswordSection, CookiePolicySection, EditProfileSection, EnrolledCoursesSection, HelpSection, PaymentsSection, PrivacyPolicySection, PrivacySettingsSection, ProfileSection, SettingsSection, TermsSection } from './ProfileSections';
 
 interface ProfileSidebarProps {
   visible: boolean;
@@ -47,6 +47,7 @@ export default function ProfileSidebar({ visible, onClose }: ProfileSidebarProps
   const menuItems = [
     { id: 'profile', title: 'Profile', icon: 'person-outline', color: '#7A4D3A', gradient: ['#7A4D3A', '#B75F37'] },
     { id: 'enrolledCourses', title: 'Enrolled Courses', icon: 'book-outline', color: '#4CAF50', gradient: ['#4CAF50', '#66BB6A'] },
+    { id: 'payments', title: 'Payments', icon: 'card-outline', color: '#FF9800', gradient: ['#FF9800', '#FFB74D'] },
     { id: 'settings', title: 'Settings', icon: 'settings-outline', color: '#2196F3', gradient: ['#2196F3', '#21CBF3'] },
     { id: 'help', title: 'Help & Support', icon: 'help-circle-outline', color: '#9C27B0', gradient: ['#9C27B0', '#BA68C8'] },
     { id: 'about', title: 'About', icon: 'information-circle-outline', color: '#607D8B', gradient: ['#607D8B', '#90A4AE'] },
@@ -93,6 +94,8 @@ export default function ProfileSidebar({ visible, onClose }: ProfileSidebarProps
         return <ProfileSection onBack={handleBackToMenu} />;
       case 'enrolledCourses':
         return <EnrolledCoursesSection onBack={handleBackToMenu} />;
+      case 'payments':
+        return <PaymentsSection onBack={handleBackToMenu} />;
       case 'settings':
         return <SettingsSection onBack={handleBackToMenu} onNavigate={(target) => setCurrentSection(target)} />;
       case 'help':
@@ -138,82 +141,87 @@ export default function ProfileSidebar({ visible, onClose }: ProfileSidebarProps
               {currentSection ? (
                 renderCurrentSection()
               ) : (
-                <ScrollView 
-                  style={styles.scrollContainer}
-                  showsVerticalScrollIndicator={false}
-                  bounces={false}
-                >
-                  <View style={styles.handleBar} />
-                  
-                  <View style={styles.profileHeader}>
-                    <View style={styles.profileImageContainer}>
-                      <Image
-                        source={require('@/assets/images/user.png')}
-                        style={styles.profileImage}
-                        contentFit="cover"
-                      />
-                      <View style={styles.onlineIndicator} />
+                <>
+                  <View style={styles.fixedHeader}>
+                    <View style={styles.handleBar} />
+                    
+                    <View style={styles.profileHeader}>
+                      <View style={styles.profileImageContainer}>
+                        <Image
+                          source={require('@/assets/images/user.png')}
+                          style={styles.profileImage}
+                          contentFit="cover"
+                        />
+                        <View style={styles.onlineIndicator} />
+                      </View>
+                      <View style={styles.profileInfo}>
+                        <Text style={styles.profileName}>Bavi Bavi</Text>
+                        <Text style={styles.profileEmail}>bavi123@gmail.com</Text>
+                        <View style={styles.levelBadge}>
+                          <Ionicons name="star" size={12} color="#FFD700" />
+                          <Text style={styles.levelText}>Intermediate</Text>
+                        </View>
+                      </View>
+                      <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                        <Ionicons name="close" size={24} color="#7A4D3A" />
+                      </TouchableOpacity>
                     </View>
-                    <View style={styles.profileInfo}>
-                      <Text style={styles.profileName}>Bavi Bavi</Text>
-                      <Text style={styles.profileEmail}>bavi123@gmail.com</Text>
-                      <View style={styles.levelBadge}>
-                        <Ionicons name="star" size={12} color="#FFD700" />
-                        <Text style={styles.levelText}>Intermediate</Text>
+                  </View>
+
+                  {/* Scrollable Content */}
+                  <ScrollView 
+                    style={styles.scrollContainer}
+                    showsVerticalScrollIndicator={false}
+                    bounces={false}
+                  >
+                    {/* Quick Stats */}
+                    <View style={styles.quickStats}>
+                      <View style={styles.statItem}>
+                        <Text style={styles.statNumber}>24</Text>
+                        <Text style={styles.statLabel}>Classes</Text>
+                      </View>
+                      <View style={styles.statDivider} />
+                      <View style={styles.statItem}>
+                        <Text style={styles.statNumber}>156</Text>
+                        <Text style={styles.statLabel}>Hours</Text>
+                      </View>
+                      <View style={styles.statDivider} />
+                      <View style={styles.statItem}>
+                        <Text style={styles.statNumber}>8</Text>
+                        <Text style={styles.statLabel}>Badges</Text>
                       </View>
                     </View>
-                    <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                      <Ionicons name="close" size={24} color="#7A4D3A" />
-                    </TouchableOpacity>
-                  </View>
 
-                  {/* Quick Stats */}
-                  <View style={styles.quickStats}>
-                    <View style={styles.statItem}>
-                      <Text style={styles.statNumber}>24</Text>
-                      <Text style={styles.statLabel}>Classes</Text>
-                    </View>
-                    <View style={styles.statDivider} />
-                    <View style={styles.statItem}>
-                      <Text style={styles.statNumber}>156</Text>
-                      <Text style={styles.statLabel}>Hours</Text>
-                    </View>
-                    <View style={styles.statDivider} />
-                    <View style={styles.statItem}>
-                      <Text style={styles.statNumber}>8</Text>
-                      <Text style={styles.statLabel}>Badges</Text>
-                    </View>
-                  </View>
-
-                  {/* Menu Items */}
-                  <View style={styles.menuContainer}>
-                    {menuItems.map((item, index) => (
-                      <TouchableOpacity
-                        key={item.id}
-                        style={[styles.menuItem, { marginTop: index === 0 ? 0 : 8 }]}
-                        onPress={() => handleMenuItemPress(item.id)}
-                        activeOpacity={0.7}
-                      >
-                        <View style={styles.menuItemLeft}>
-                          <View style={[styles.iconContainer, { backgroundColor: item.gradient[0] + '15' }]}>
-                            <Ionicons name={item.icon as any} size={22} color={item.color} />
+                    {/* Menu Items */}
+                    <View style={styles.menuContainer}>
+                      {menuItems.map((item, index) => (
+                        <TouchableOpacity
+                          key={item.id}
+                          style={[styles.menuItem, { marginTop: index === 0 ? 0 : 8 }]}
+                          onPress={() => handleMenuItemPress(item.id)}
+                          activeOpacity={0.7}
+                        >
+                          <View style={styles.menuItemLeft}>
+                            <View style={[styles.iconContainer, { backgroundColor: item.gradient[0] + '15' }]}>
+                              <Ionicons name={item.icon as any} size={22} color={item.color} />
+                            </View>
+                            <Text style={styles.menuItemText}>{item.title}</Text>
                           </View>
-                          <Text style={styles.menuItemText}>{item.title}</Text>
-                        </View>
-                        <View style={styles.menuItemRight}>
-                          <Ionicons name="chevron-forward" size={16} color="#C0C0C0" />
-                        </View>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
+                          <View style={styles.menuItemRight}>
+                            <Ionicons name="chevron-forward" size={16} color="#C0C0C0" />
+                          </View>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
 
-                  {/* App Version */}
-                  <View style={styles.versionContainer}>
-                    <View style={styles.versionDivider} />
-                    <Text style={styles.versionText}>Bharatanatyam App v1.0.0</Text>
-                    <Text style={styles.copyrightText}>© 2025 All rights reserved</Text>
-                  </View>
-                </ScrollView>
+                    {/* App Version */}
+                    <View style={styles.versionContainer}>
+                      <View style={styles.versionDivider} />
+                      <Text style={styles.versionText}>Bharatanatyam App v1.0.0</Text>
+                      <Text style={styles.copyrightText}>© 2025 All rights reserved</Text>
+                    </View>
+                  </ScrollView>
+                </>
               )}
         </Animated.View>
       </View>
@@ -246,6 +254,11 @@ const styles = StyleSheet.create({
     elevation: 8,
     overflow: 'hidden',
   },
+  fixedHeader: {
+    backgroundColor: '#F9EDEF',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+  },
   scrollContainer: {
     flex: 1,
   },
@@ -256,16 +269,12 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     alignSelf: 'center',
     marginTop: 12,
-    marginBottom: 20,
   },
   profileHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 24,
     paddingVertical: 20,
-    backgroundColor: '#F9EDEF',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
   },
   profileImageContainer: {
     position: 'relative',
