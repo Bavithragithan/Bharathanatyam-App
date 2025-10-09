@@ -472,9 +472,11 @@ export const PaymentsSection = ({ onBack }: SectionProps) => {
         keyboardShouldPersistTaps="handled"
         nestedScrollEnabled={true}
       >
+        {/* Payment Summary Card */}
         <View style={styles.paymentSummaryCard}>
           <Text style={styles.paymentSummaryTitle}>Payment Summary</Text>
           
+          {/* First Row - Successful and Total Payments */}
           <View style={styles.paymentSummaryRow}>
             <View style={styles.paymentSummaryItem}>
               <Ionicons name="checkmark-circle-outline" size={24} color="#2196F3" />
@@ -495,6 +497,7 @@ export const PaymentsSection = ({ onBack }: SectionProps) => {
             </View>
           </View>
           
+          {/* Second Row - Total Spent */}
           <View style={styles.paymentSummaryRow}>
             <View style={styles.paymentSummaryItem}>
               <Ionicons name="wallet-outline" size={24} color="#7A4D3A" />
@@ -506,13 +509,7 @@ export const PaymentsSection = ({ onBack }: SectionProps) => {
           </View>
         </View>
 
-        <View style={styles.addPaymentContainer}>
-          <TouchableOpacity style={styles.addPaymentButton}>
-            <Ionicons name="add-circle-outline" size={24} color="#FFFFFF" />
-            <Text style={styles.addPaymentButtonText}>Add New Payment</Text>
-          </TouchableOpacity>
-        </View>
-
+        {/* Payment History */}
         <View style={styles.paymentHistoryContainer}>
           <Text style={styles.paymentHistoryTitle}>Payment History</Text>
           
@@ -564,7 +561,28 @@ export const PaymentsSection = ({ onBack }: SectionProps) => {
             </View>
           ))}
         </View>
-        
+
+
+        {/* Add New Payment Button */}
+        <View style={styles.addPaymentContainer}>
+          <TouchableOpacity style={styles.addPaymentButton}>
+            <Ionicons name="add-circle-outline" size={24} color="#FFFFFF" />
+            <Text style={styles.addPaymentButtonText}>Add New Payment</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Quick Actions */}
+        <View style={styles.paymentQuickActions}>
+          <TouchableOpacity style={styles.quickActionButton}>
+            <Ionicons name="card-outline" size={20} color="#7A4D3A" />
+            <Text style={styles.quickActionText}>Payment Methods</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.quickActionButton}>
+            <Ionicons name="help-circle-outline" size={20} color="#7A4D3A" />
+            <Text style={styles.quickActionText}>Payment Help</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </View>
   );
