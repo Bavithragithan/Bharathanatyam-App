@@ -1,9 +1,9 @@
+import MainMenuHeader from '@/components/ui/MainMenuHeader';
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { useMemo, useRef, useState } from 'react';
-import { ImageBackground, Modal, PanResponder, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import { ImageBackground, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function MainMenuScreen() {
   const router = useRouter();
@@ -36,44 +36,26 @@ export default function MainMenuScreen() {
   const progressPercentage = (completedCount / totalTopics) * 100;
 
   return (
-    <ImageBackground 
-      source={require('@/assets/images/main-menu.jpg')} 
-      style={styles.backgroundImage}
-      resizeMode="cover"
-    >
-      <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <MainMenuHeader />
+      <ImageBackground 
+        source={require('@/assets/images/main-menu.jpg')} 
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
         <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
-          <View style={styles.headerRow}>
-            <View style={styles.headerSpacer} />
-            <View style={styles.headerIcons}>
-              <TouchableOpacity accessibilityLabel="Notifications" style={styles.bellButton}>
-                <Ionicons name="notifications-outline" size={28} color="#7A4D3A" />
-              </TouchableOpacity>
-              <Image source={require('@/assets/images/user.png')} style={styles.avatar} contentFit="cover" />
-            </View>
-          </View>
-
-          <View style={styles.calendarRow}>
-            <WeekStrip />
-          </View>
 
           <View style={styles.grid}>
             {tiles.slice(0, 4).map((t, i) => (
               <TouchableOpacity key={i} activeOpacity={0.9} style={styles.tile} onPress={() => {
                 const routes = [
-                  '/(tabs)/theory',
-                  '/(tabs)/techniques', 
-                  '/(tabs)/workouts',
-                  '/(tabs)/community'
+                  '/(tabs)/theory' as const,
+                  '/(tabs)/techniques' as const, 
+                  '/(tabs)/workouts' as const,
+                  '/(tabs)/community' as const
                 ];
                 router.push(routes[i]);
               }}>
-                <LinearGradient
-                  colors={['#A0522D', '#CD853F', '#D2B48C']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={styles.gradientBackground}
-                />
                 <Text style={styles.tileText}>{t.title}</Text>
               </TouchableOpacity>
             ))}
@@ -83,12 +65,6 @@ export default function MainMenuScreen() {
             <TouchableOpacity activeOpacity={0.9} style={[styles.tile, styles.singleTile]} onPress={() => {
               router.push('/(tabs)/choreography');
             }}>
-              <LinearGradient
-                colors={['#A0522D', '#CD853F', '#D2B48C']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.gradientBackground}
-              />
               <Text style={styles.tileText}>{tiles[4].title}</Text>
             </TouchableOpacity>
           </View>
@@ -111,259 +87,98 @@ export default function MainMenuScreen() {
             </TouchableOpacity>
           </View>
         </ScrollView>
+      </ImageBackground>
 
-        {/* Progress Modal */}
-        <Modal
-          visible={showProgressModal}
-          transparent={true}
-          animationType="fade"
-          onRequestClose={() => setShowProgressModal(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>Quiz Topics</Text>
-                <TouchableOpacity 
-                  onPress={() => setShowProgressModal(false)}
-                  style={styles.closeButton}
+      {/* Progress Modal */}
+      <Modal
+        visible={showProgressModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowProgressModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Quiz Topics</Text>
+              <TouchableOpacity 
+                onPress={() => setShowProgressModal(false)}
+                style={styles.closeButton}
+              >
+                <Ionicons name="close" size={24} color="#7A4D3A" />
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.modalButtons}>
+              <TouchableOpacity 
+                style={styles.modalButton}
+                onPress={() => {
+                  setShowProgressModal(false);
+                  // Navigate to theory quiz with completed topics
+                  router.push({
+                    pathname: '/quiz',
+                    params: { 
+                      category: 'theory',
+                      topics: JSON.stringify(completedTopics.theory.filter(t => t.completed).map(t => t.title))
+                    }
+                  });
+                }}
+              >
+                <LinearGradient
+                  colors={['#A0522D', '#CD853F', '#D2B48C']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.modalButtonGradient}
                 >
-                  <Ionicons name="close" size={24} color="#7A4D3A" />
-                </TouchableOpacity>
-              </View>
-              
-              <View style={styles.modalButtons}>
-                <TouchableOpacity 
-                  style={styles.modalButton}
-                  onPress={() => {
-                    setShowProgressModal(false);
-                    // Navigate to theory quiz with completed topics
-                    router.push({
-                      pathname: '/quiz',
-                      params: { 
-                        category: 'theory',
-                        topics: JSON.stringify(completedTopics.theory.filter(t => t.completed).map(t => t.title))
-                      }
-                    });
-                  }}
-                >
-                  <LinearGradient
-                    colors={['#A0522D', '#CD853F', '#D2B48C']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={styles.modalButtonGradient}
-                  >
-                    <Text style={styles.modalButtonText}>Theory</Text>
-                    <Text style={styles.modalButtonSubtext}>
-                      {completedTopics.theory.filter(t => t.completed).length} completed
-                    </Text>
-                  </LinearGradient>
-                </TouchableOpacity>
+                  <Text style={styles.modalButtonText}>Theory</Text>
+                  <Text style={styles.modalButtonSubtext}>
+                    {completedTopics.theory.filter(t => t.completed).length} completed
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
 
-                <TouchableOpacity 
-                  style={styles.modalButton}
-                  onPress={() => {
-                    setShowProgressModal(false);
-                    // Navigate to techniques quiz with completed topics
-                    router.push({
-                      pathname: '/quiz',
-                      params: { 
-                        category: 'techniques',
-                        topics: JSON.stringify(completedTopics.techniques.filter(t => t.completed).map(t => t.title))
-                      }
-                    });
-                  }}
+              <TouchableOpacity 
+                style={styles.modalButton}
+                onPress={() => {
+                  setShowProgressModal(false);
+                  // Navigate to techniques quiz with completed topics
+                  router.push({
+                    pathname: '/quiz',
+                    params: { 
+                      category: 'techniques',
+                      topics: JSON.stringify(completedTopics.techniques.filter(t => t.completed).map(t => t.title))
+                    }
+                  });
+                }}
+              >
+                <LinearGradient
+                  colors={['#A0522D', '#CD853F', '#D2B48C']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.modalButtonGradient}
                 >
-                  <LinearGradient
-                    colors={['#A0522D', '#CD853F', '#D2B48C']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={styles.modalButtonGradient}
-                  >
-                    <Text style={styles.modalButtonText}>Techniques</Text>
-                    <Text style={styles.modalButtonSubtext}>
-                      {completedTopics.techniques.filter(t => t.completed).length} completed
-                    </Text>
-                  </LinearGradient>
-                </TouchableOpacity>
-              </View>
+                  <Text style={styles.modalButtonText}>Techniques</Text>
+                  <Text style={styles.modalButtonSubtext}>
+                    {completedTopics.techniques.filter(t => t.completed).length} completed
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
             </View>
           </View>
-        </Modal>
-      </SafeAreaView>
-    </ImageBackground>
+        </View>
+      </Modal>
+    </SafeAreaView>
   );
 }
 
-function startOfWeekSunday(date: Date) {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = d.getDate() - day;
-  const start = new Date(d.setDate(diff));
-  start.setHours(0, 0, 0, 0);
-  return start;
-}
-
-function addDays(date: Date, days: number) {
-  const result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-}
-
-function isSameDay(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-}
-
-function WeekStrip() {
-  const today = useMemo(() => {
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    return now;
-  }, []);
-
-  const [weekStart, setWeekStart] = useState<Date>(() => startOfWeekSunday(new Date()));
-
-  const days = useMemo(() => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)), [weekStart]);
-
-  const goPrevWeek = () => setWeekStart(prev => addDays(prev, -7));
-  const goNextWeek = () => setWeekStart(prev => addDays(prev, 7));
-
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-  const swipeThreshold = 40;
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (_, gesture) => {
-        return Math.abs(gesture.dx) > 10 && Math.abs(gesture.dy) < 10;
-      },
-      onPanResponderRelease: (_, gesture) => {
-        if (gesture.dx > swipeThreshold) {
-          goPrevWeek();
-        } else if (gesture.dx < -swipeThreshold) {
-          goNextWeek();
-        }
-      }
-    })
-  ).current;
-
-  return (
-    <View style={styles.calendarBar} {...panResponder.panHandlers} accessibilityRole="adjustable" accessibilityLabel="Week calendar" accessibilityHint="Swipe left or right to change week">
-      <TouchableOpacity onPress={goPrevWeek} accessibilityLabel="Previous week" style={styles.navButton}>
-        <Text style={styles.navText}>‹</Text>
-      </TouchableOpacity>
-      <View style={styles.daysRow}>
-        {days.map((d, idx) => {
-          const selected = isSameDay(d, today);
-          return (
-            <View key={idx} style={styles.dayWrapper}>
-              <View style={[styles.dayCell, selected && styles.dayCellSelected]}>
-                <Text style={[styles.dayLabel, selected && styles.dayLabelSelected]}>{dayNames[d.getDay()]}</Text>
-                <Text style={[styles.dateLabel, selected && styles.dateLabelSelected]}>{d.getDate()}</Text>
-              </View>
-            </View>
-          );
-        })}
-      </View>
-      <TouchableOpacity onPress={goNextWeek} accessibilityLabel="Next week" style={styles.navButton}>
-        <Text style={styles.navText}>›</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     width: '100%',
-    height: '100%',
   },
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
-    paddingTop: 30
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 6
-  },
-  headerSpacer: { width: 34, height: 34 },
-  headerIcons: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  bellButton: { padding: 6 },
-  avatar: { width: 34, height: 34, borderRadius: 17 },
-  calendarRow: {
-    paddingHorizontal: 12,
-    paddingTop: 6,
-    paddingBottom: 6,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5D6D8'
-  },
-  calendarBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-    borderRadius: 12,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-  navButton: {
-    width: 28,
-    height: 28,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  navText: {
-    fontSize: 20,
-    color: '#7A4D3A',
-    fontWeight: '600',
-  },
-  daysRow: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginHorizontal: 6
-  },
-  dayWrapper: {
-    flex: 1,
-    alignItems: 'center'
-  },
-  dayCell: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    borderWidth: 0,
-  },
-  dayCellSelected: {
-    backgroundColor: '#B75F37',
-    borderWidth: 1,
-    borderColor: '#8B4513',
-  },
-  dayLabel: {
-    fontSize: 11,
-    color: '#7A4D3A',
-    fontWeight: '600',
-    lineHeight: 12,
-  },
-  dayLabelSelected: {
-    color: '#FFFFFF',
-    fontWeight: '700',
-  },
-  dateLabel: {
-    fontSize: 13,
-    color: '#7A4D3A',
-    fontWeight: '700',
-    lineHeight: 16,
-  },
-  dateLabelSelected: {
-    color: '#FFFFFF',
-    fontWeight: '800',
+    backgroundColor: '#FFFFFF',
   },
   grid: {
     flexDirection: 'row',
@@ -379,34 +194,32 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgba(139, 69, 19, 0.85)', // Much more opaque brown background
     borderWidth: 2,
-    borderColor: 'rgba(205, 133, 63, 0.4)',
-    shadowColor: '#000',
-    shadowOpacity: 0.4,
-    shadowRadius: 15,
+    borderColor: 'rgba(218, 165, 32, 0.9)', // Strong gold border
+    shadowColor: '#000000',
+    shadowOpacity: 0.4, // Dark shadow for better separation
+    shadowRadius: 20,
     shadowOffset: { width: 0, height: 8 },
-    elevation: 12,
+    elevation: 25,
     overflow: 'hidden',
     position: 'relative',
+    // Solid appearance with subtle highlights
+    borderTopColor: 'rgba(255, 255, 255, 0.3)', // Subtle top highlight
+    borderLeftColor: 'rgba(255, 255, 255, 0.2)', // Subtle left highlight
+    borderRightColor: 'rgba(0, 0, 0, 0.3)', // Dark right shadow
+    borderBottomColor: 'rgba(0, 0, 0, 0.4)', // Dark bottom shadow
   },
   tileText: {
-    color: '#FFFFFF',
+    color: '#FFFFFF', // White text for better visibility
     fontWeight: '900',
-    fontSize: 18,
-    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    fontSize: 20, // Larger font for better readability
+    textShadowColor: 'rgba(0, 0, 0, 0.9)', // Stronger dark shadow
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 6,
     zIndex: 2,
-    letterSpacing: 0.5,
-  },
-  gradientBackground: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    borderRadius: 16,
-    zIndex: 1,
+    letterSpacing: 1, // Increased letter spacing
+    // Remove glow effect for cleaner look
   },
   singleTileWrapper: {
     alignItems: 'center',
