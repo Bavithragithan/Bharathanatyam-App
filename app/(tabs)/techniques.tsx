@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { useRef, useState } from 'react';
 import { Dimensions, FlatList, ImageBackground, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Header from '../../components/ui/Header';
