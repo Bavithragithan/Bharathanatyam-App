@@ -1,11 +1,13 @@
 import { useRef, useState } from 'react';
 import { Dimensions, FlatList, ImageBackground, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Header from '../../components/ui/Header';
 import { getTechniquesData } from '../../data';
 
 type HotspotKey = 'face' | 'hand' | 'knee' | 'leg' | 'stomach';
 
 export default function TechniquesScreen() {
+  const insets = useSafeAreaInsets();
   const [openHotspot, setOpenHotspot] = useState<HotspotKey | null>(null);
   const [mudraIndex, setMudraIndex] = useState(0);
   const [mudraSetIndex, setMudraSetIndex] = useState(0);
@@ -55,7 +57,7 @@ export default function TechniquesScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
       <Header title="Techniques" />
 
       <View style={styles.content}>

@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Header from '../../components/ui/Header';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -21,6 +22,7 @@ const choreographyTabs = ['Live Classes', 'Teachers', 'Schedule'];
 
 export default function ChoreographyScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState('Live Classes');
   const [isAboutVisible, setIsAboutVisible] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -437,7 +439,7 @@ export default function ChoreographyScreen() {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
       <Header title="Choreography" backgroundColor="#FDF2F8" />
 
       <View style={styles.tabsContainer}>

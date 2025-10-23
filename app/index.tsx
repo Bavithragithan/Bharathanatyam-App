@@ -2,14 +2,17 @@ import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function WelcomePage() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+  
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
       <Image
-        source={require('@/assets/images/welcome.png')}
+        source={require('@/assets/images/welcome.jpeg')}
         contentFit="cover"
         style={styles.bgImage}
         cachePolicy="memory-disk"
@@ -39,6 +42,13 @@ export default function WelcomePage() {
             activeOpacity={0.85}
           onPress={() => router.push('/get-started')}
           >
+            <BlurView intensity={20} tint="light" style={styles.buttonBlur} />
+            <LinearGradient
+              colors={["rgba(255,255,255,0.25)", "rgba(255,255,255,0.1)"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.buttonSheen}
+            />
             <Text style={styles.primaryButtonText}>Get Started</Text>
           </TouchableOpacity>
 
@@ -67,7 +77,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
     paddingHorizontal: 16,
-    paddingBottom: 60,
+    paddingBottom: Platform.OS === 'android' ? 80 : 60,
   },
   glassCard: {
     width: '100%',
@@ -109,20 +119,27 @@ const styles = StyleSheet.create({
     marginTop: 40,
     width: '95%',
     alignSelf: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     paddingVertical: 8,
     borderRadius: 15,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.18,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    overflow: 'hidden',
   },
   primaryButtonText: {
-    color: '#BC6135',
+    color: '#FFFFFF',
     fontSize: 24,
     fontWeight: 'normal',
+    zIndex: 1,
+  },
+  buttonBlur: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 15,
+  },
+  buttonSheen: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 15,
   },
   secondaryButton: {
     marginTop: 10,

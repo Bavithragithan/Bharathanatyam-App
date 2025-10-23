@@ -12,11 +12,13 @@ import {
     View,
 } from 'react-native';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width, height } = Dimensions.get('window');
 
 export default function VideoPlayerScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const params = useLocalSearchParams();
   const videoRef = useRef<VideoView>(null);
   
@@ -189,7 +191,7 @@ export default function VideoPlayerScreen() {
 
   return (
     <GestureHandlerRootView style={styles.container}>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
         <View style={[
           styles.videoContainer, 
           isFullscreen ? styles.fullscreenContainer : styles.portraitContainer
