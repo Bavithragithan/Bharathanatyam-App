@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { useRef, useState } from 'react';
-import { Dimensions, FlatList, Image, ImageBackground, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, ImageBackground, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Header from '../../components/ui/Header';
 import { getTechniquesData } from '../../data';
@@ -58,7 +58,7 @@ export default function TechniquesScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { paddingBottom: 0 }]}>
+    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
       <Header title="Techniques" />
 
       <View style={styles.content}>
@@ -85,13 +85,13 @@ export default function TechniquesScreen() {
               <ImageBackground
                 source={require('@/assets/images/shivan.jpeg')}
                 resizeMode="cover"
-                style={[styles.hero, { flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }]}
+                style={styles.hero}
               >
-                {renderHotspot('face', { top: '15%', left: '43%' })}
-                {renderHotspot('hand', { top: '40%', left: '18%' })}
-                {renderHotspot('knee', { top: '65%', left: '30%' })}
+                {renderHotspot('face', { top: '12%', left: '46%' })}
+                {renderHotspot('hand', { top: '35%', left: '28%' })}
+                {renderHotspot('knee', { top: '65%', left: '36%' })}
                 {renderHotspot('leg', { top: '82%', left: '48%' })}
-                {renderHotspot('stomach', { top: '42%', left: '45%' })}
+                {renderHotspot('stomach', { top: '35%', left: '47%' })}
               </ImageBackground>
             </View>
           )}
@@ -122,13 +122,13 @@ export default function TechniquesScreen() {
                 <View style={styles.thumbCol}>
                   {currentSets[mudraSetIndex]?.images.map((src: any, i: number) => (
                     <TouchableOpacity key={i} onPress={() => setMudraIndex(i)} style={[styles.thumbWrap, mudraIndex === i && styles.thumbWrapActive]}>
-                      <Image source={src} style={styles.thumb} resizeMode="cover" />
+                      <Image source={src} style={styles.thumb} contentFit="cover" />
                     </TouchableOpacity>
                   ))}
                 </View>
                 <View style={styles.previewCol}>
                   <Text style={styles.topicTitle}>{mudraSetIndex + 1}. {currentSets[mudraSetIndex]?.title}</Text>
-                  <Image source={currentSets[mudraSetIndex]?.images[mudraIndex]} style={styles.preview} resizeMode="cover" />
+                  <Image source={currentSets[mudraSetIndex]?.images[mudraIndex]} style={styles.preview} contentFit="cover" />
                   
                   <Text style={styles.description}>{currentSets[mudraSetIndex]?.description}</Text>
                   
@@ -158,12 +158,12 @@ export default function TechniquesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: '#F9EDEF',
     paddingTop: 20,
   },
   content: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: '#F9EDEF',
   },
   tabsContainer: {
     flexDirection: 'row',
@@ -345,4 +345,4 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     textAlign: 'justify',
   },
-});
+})
