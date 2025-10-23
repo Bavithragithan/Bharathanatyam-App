@@ -64,12 +64,12 @@ export default function WorkoutsScreen() {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { paddingBottom: 0 }]}>
+    <SafeAreaView style={styles.container}>
       <Header title="Workouts" backgroundColor="#FDF2F8" />
 
       <ImageBackground
         source={require('@/assets/images/main-menu.jpeg')}
-        style={[styles.content, { flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }]}
+        style={[styles.content, { flex: 1 }]}
         imageStyle={{ resizeMode: 'cover', opacity: 0.9 }}
       >
         <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -129,7 +129,7 @@ export default function WorkoutsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: '#FDF2F8',
     paddingTop: 20,
   },
   content: {
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   },
   cardsContainer: {
     flex: 1,
-    paddingBottom: 0,
+    paddingBottom: 100,
   },
   row: {
     justifyContent: 'space-between',

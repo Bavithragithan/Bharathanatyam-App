@@ -2,17 +2,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import {
-    Dimensions,
-    FlatList,
-    ImageBackground,
-    Modal,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  FlatList,
+  ImageBackground,
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Header from '../../components/ui/Header';
@@ -197,31 +197,25 @@ export default function ChoreographyScreen() {
         </View>
       </View>
       
+      <View style={styles.bottomSpacing} />
     </ScrollView>
   );
 
-  const TeachersComponent = () => {
-    const filteredTeachers = teachers.filter(teacher =>
-      teacher.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      teacher.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      teacher.experience.toLowerCase().includes(searchText.toLowerCase())
-    );
-
-    return (
-      <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
-        <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search Teachers"
-            placeholderTextColor="#999"
-            value={searchText}
-            onChangeText={setSearchText}
-          />
-        </View>
-        
-        <View style={styles.teachersList}>
-          {filteredTeachers.map((teacher) => (
+  const TeachersComponent = () => (
+    <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
+      <View style={styles.searchContainer}>
+        <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search Teachers"
+          placeholderTextColor="#999"
+          value={searchText}
+          onChangeText={setSearchText}
+        />
+      </View>
+      
+      <View style={styles.teachersList}>
+        {teachers.map((teacher) => (
           <View key={teacher.name} style={styles.teacherCard}>
             <View style={styles.glassCardContent}>
               <View style={styles.teacherContent}>
@@ -256,17 +250,11 @@ export default function ChoreographyScreen() {
             </View>
           </View>
         ))}
-        
-        {filteredTeachers.length === 0 && searchText.length > 0 && (
-          <View style={styles.noResultsContainer}>
-            <Text style={styles.noResultsText}>No teachers found matching "{searchText}"</Text>
-          </View>
-        )}
       </View>
       
+      <View style={styles.bottomSpacing} />
     </ScrollView>
-    );
-  };
+  );
 
   const CalendarComponent = () => {
     const daysInMonth = getDaysInMonth(currentMonth);
@@ -444,6 +432,7 @@ export default function ChoreographyScreen() {
         )}
 
         
+        <View style={styles.bottomSpacing} />
       </ScrollView>
     );
   };
@@ -455,7 +444,7 @@ export default function ChoreographyScreen() {
   ];
 
   return (
-    <SafeAreaView style={[styles.container, { paddingBottom: 0 }]}>
+    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
       <Header title="Choreography" backgroundColor="#FDF2F8" />
 
       <View style={styles.tabsContainer}>
@@ -475,7 +464,7 @@ export default function ChoreographyScreen() {
 
       <ImageBackground
         source={require('@/assets/images/main-menu.jpeg')}
-        style={[styles.content, { flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }]}
+        style={[styles.content, { flex: 1 }]}
         imageStyle={{ resizeMode: 'cover', opacity: 0.9 }}
       >
         <FlatList
@@ -549,7 +538,7 @@ export default function ChoreographyScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: '#FDF2F8',
     paddingTop: 20,
   },
   tabsContainer: {
@@ -782,6 +771,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '600',
+  },
+  bottomSpacing: {
+    height: 100,
   },
   modalBackdrop: {
     flex: 1,
@@ -1122,27 +1114,5 @@ const styles = StyleSheet.create({
     color: '#999',
     textAlign: 'center',
     lineHeight: 18,
-  },
-  // No Results Styles
-  noResultsContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    backdropFilter: 'blur(10px)',
-    borderRadius: 15,
-    marginTop: 20,
-    padding: 30,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  noResultsText: {
-    fontSize: 16,
-    color: '#A47E74',
-    textAlign: 'center',
-    fontWeight: '600',
   },
 });

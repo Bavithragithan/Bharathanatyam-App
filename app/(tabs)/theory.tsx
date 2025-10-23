@@ -34,7 +34,7 @@ export default function TheoryScreen() {
   const HistoryContent = () => (
     <ImageBackground
       source={require('@/assets/images/history.jpeg')}
-      style={[styles.scrollContainer, { flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }]}
+      style={[styles.scrollContainer, { flex: 1 }]}
       imageStyle={{ resizeMode: 'cover' , opacity: 0.9}}
     >
       <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.contentSection}>
@@ -230,7 +230,7 @@ export default function TheoryScreen() {
   const TheoryContent = () => (
     <ImageBackground
       source={require('@/assets/images/main-menu.jpeg')}
-      style={[styles.scrollContainer, { flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }]}
+      style={[styles.scrollContainer, { flex: 1 }]}
       imageStyle={{ resizeMode: 'cover', opacity: 0.9 }}
     >
       <FlatList
@@ -266,7 +266,7 @@ export default function TheoryScreen() {
   ];
 
   return (
-    <SafeAreaView style={[styles.container, { paddingBottom: 0 }]}>
+    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
       <Header title="Theory" />
 
       <View style={styles.content}>
@@ -388,14 +388,14 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: '#F9EDEF',
     paddingTop: 20
   },
 
 
   content: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: '#F9EDEF',
   },
 
   tabsContainer: {
