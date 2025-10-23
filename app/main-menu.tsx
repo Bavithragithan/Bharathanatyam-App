@@ -41,7 +41,7 @@ export default function MainMenuScreen() {
     <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
       <MainMenuHeader />
       <ImageBackground 
-        source={require('@/assets/images/main-menu.jpg')} 
+        source={require('@/assets/images/main-menu.jpeg')} 
         style={styles.backgroundImage}
         resizeMode="cover"
       >
@@ -115,7 +115,6 @@ export default function MainMenuScreen() {
                 style={styles.modalButton}
                 onPress={() => {
                   setShowProgressModal(false);
-                  // Navigate to theory quiz with completed topics
                   router.push({
                     pathname: '/quiz',
                     params: { 
@@ -197,32 +196,26 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(139, 69, 19, 0.85)', // Much more opaque brown background
-    borderWidth: 2,
-    borderColor: 'rgba(218, 165, 32, 0.9)', // Strong gold border
-    shadowColor: '#000000',
-    shadowOpacity: 0.4, // Dark shadow for better separation
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
     shadowRadius: 20,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 25,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 15,
     overflow: 'hidden',
     position: 'relative',
-    // Solid appearance with subtle highlights
-    borderTopColor: 'rgba(255, 255, 255, 0.3)', // Subtle top highlight
-    borderLeftColor: 'rgba(255, 255, 255, 0.2)', // Subtle left highlight
-    borderRightColor: 'rgba(0, 0, 0, 0.3)', // Dark right shadow
-    borderBottomColor: 'rgba(0, 0, 0, 0.4)', // Dark bottom shadow
   },
   tileText: {
-    color: '#FFFFFF', // White text for better visibility
+    color: '#FFFFFF',
     fontWeight: '900',
-    fontSize: 20, // Larger font for better readability
-    textShadowColor: 'rgba(0, 0, 0, 0.9)', // Stronger dark shadow
+    fontSize: 20,
+    textShadowColor: 'rgba(0, 0, 0, 0.6)',
     textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 6,
+    textShadowRadius: 4,
     zIndex: 2,
-    letterSpacing: 1, // Increased letter spacing
-    // Remove glow effect for cleaner look
+    letterSpacing: 1,
   },
   singleTileWrapper: {
     alignItems: 'center',
@@ -238,16 +231,16 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   progressContainer: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: 'rgba(255, 255, 255, 0.2)',
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
+    shadowOpacity: 0.2,
+    shadowRadius: 15,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 10,
   },
   progressHeader: {
     flexDirection: 'row',
@@ -256,14 +249,20 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   progressTitle: {
-    color: '#7A4D3A',
+    color: '#FFFFFF',
     fontSize: 18,
     fontWeight: '700',
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 3,
   },
   progressPercentage: {
-    color: '#7A4D3A',
+    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '800',
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 3,
   },
   progressBarBackground: {
     height: 8,
@@ -283,10 +282,13 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   progressText: {
-    color: '#7A4D3A',
+    color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '500',
     textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   // Modal Styles
   modalOverlay: {

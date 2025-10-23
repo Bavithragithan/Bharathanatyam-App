@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { useRef, useState } from 'react';
-import { Dimensions, FlatList, ImageBackground, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Image, ImageBackground, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Header from '../../components/ui/Header';
 import { getTechniquesData } from '../../data';
@@ -83,15 +83,15 @@ export default function TechniquesScreen() {
           renderItem={({ item }) => (
             <View style={{ width: screenWidth, flex: 1 }}>
               <ImageBackground
-                source={require('@/assets/images/shivan.png')}
+                source={require('@/assets/images/shivan.jpeg')}
                 resizeMode="cover"
                 style={[styles.hero, { flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }]}
               >
-                {renderHotspot('face', { top: '12%', left: '46%' })}
-                {renderHotspot('hand', { top: '35%', left: '28%' })}
-                {renderHotspot('knee', { top: '65%', left: '36%' })}
+                {renderHotspot('face', { top: '15%', left: '43%' })}
+                {renderHotspot('hand', { top: '40%', left: '18%' })}
+                {renderHotspot('knee', { top: '65%', left: '30%' })}
                 {renderHotspot('leg', { top: '82%', left: '48%' })}
-                {renderHotspot('stomach', { top: '35%', left: '47%' })}
+                {renderHotspot('stomach', { top: '42%', left: '45%' })}
               </ImageBackground>
             </View>
           )}
@@ -122,13 +122,13 @@ export default function TechniquesScreen() {
                 <View style={styles.thumbCol}>
                   {currentSets[mudraSetIndex]?.images.map((src: any, i: number) => (
                     <TouchableOpacity key={i} onPress={() => setMudraIndex(i)} style={[styles.thumbWrap, mudraIndex === i && styles.thumbWrapActive]}>
-                      <Image source={src} style={styles.thumb} contentFit="cover" />
+                      <Image source={src} style={styles.thumb} resizeMode="cover" />
                     </TouchableOpacity>
                   ))}
                 </View>
                 <View style={styles.previewCol}>
                   <Text style={styles.topicTitle}>{mudraSetIndex + 1}. {currentSets[mudraSetIndex]?.title}</Text>
-                  <Image source={currentSets[mudraSetIndex]?.images[mudraIndex]} style={styles.preview} contentFit="cover" />
+                  <Image source={currentSets[mudraSetIndex]?.images[mudraIndex]} style={styles.preview} resizeMode="cover" />
                   
                   <Text style={styles.description}>{currentSets[mudraSetIndex]?.description}</Text>
                   

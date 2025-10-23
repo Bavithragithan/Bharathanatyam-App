@@ -1,4 +1,6 @@
+import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useMemo, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -39,14 +41,12 @@ export default function ResetPasswordScreen() {
     }, [strengthScore]);
 
     const strengthColor = useMemo(() => {
-        if (strengthScore >= 4) return '#1DB954'; // green
+        if (strengthScore >= 4) return '#1DB954';
         if (strengthScore === 3) return '#46B17B';
         if (strengthScore === 2) return '#E0A800';
         if (strengthScore === 1) return '#E07B00';
         return '#D0D0D0';
     }, [strengthScore]);
-
-    // no timers to clean up
 
     const canSubmit = password.length >= 8 && /\d/.test(password) && /[^A-Za-z0-9]/.test(password) && password === confirmPassword;
 
@@ -57,95 +57,101 @@ export default function ResetPasswordScreen() {
 
     return (
         <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
+            <Image
+                source={require('@/assets/images/welcome.jpeg')}
+                contentFit="cover"
+                style={styles.bgImage}
+                cachePolicy="memory-disk"
+            />
             <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}>
                 <ScrollView ref={scrollRef} contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
                     <View style={styles.overlay}>
-                        <View style={styles.cardContainer}>
-                            <View style={styles.bannerContainer}>
-                                <Image
-                                    source={require('@/assets/images/wave.png')}
-                                    style={styles.waveImage}
-                                    contentFit="cover"
-                                />
-                                <View style={styles.bannerOverlay}>
-                                    <TouchableOpacity
-                                        style={styles.backBtn}
-                                        activeOpacity={0.8}
-                                        onPress={() => router.back()}
-                                    >
-                                        <Text style={styles.backIcon}>‹</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-
-                            <View style={styles.contentArea}>
-                                <View style={styles.textContainer}>
-                                    <Text style={styles.title}>Reset Password</Text>
-                                </View>
-                                <View style={styles.illustrationContainer}>
-                                    <Image
-                                        source={require('@/assets/images/logo-2.png')}
-                                        style={styles.logo}
-                                        contentFit="contain"
-                                    />
-                                </View>
-                            </View>
-
-                            <View style={styles.formContainer}>
-                                <Text style={styles.tipTitle}>*Your new password should be at least 8
-                                    characters, including a number and a
-                                    special character</Text>
-
-                                <Text style={styles.inputLabel}>*New password</Text>
-                                <View style={styles.passwordContainer}>
-                                    <TextInput
-                                        style={styles.passwordInput}
-                                        placeholder="New password"
-                                        placeholderTextColor="#999"
-                                        secureTextEntry={!showPassword}
-                                        value={password}
-                                        onChangeText={setPassword}
-                                        onFocus={() => scrollRef.current?.scrollTo({ y: 400, animated: true })}
-                                    />
-                                    <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword((v) => !v)}>
-                                        <Text>👁️</Text>
-                                    </TouchableOpacity>
-                                </View>
-
-                                <View style={styles.strengthRow}>
-                                    <View style={styles.strengthBarBg}>
-                                        <View style={[styles.strengthBarFill, { width: `${(strengthScore / 5) * 100}%`, backgroundColor: strengthColor }]} />
-                                    </View>
-                                    <Text style={[styles.strengthLabel, { color: strengthColor }]}>{strengthLabel}</Text>
-                                </View>
-
-                                <Text style={[styles.inputLabel, { marginTop: 16 }]}>*Confirm password</Text>
-                                <View style={styles.passwordContainer}>
-                                    <TextInput
-                                        style={styles.passwordInput}
-                                        placeholder="Confirm password"
-                                        placeholderTextColor="#999"
-                                        secureTextEntry={!showConfirmPassword}
-                                        value={confirmPassword}
-                                        onChangeText={setConfirmPassword}
-                                        onFocus={() => scrollRef.current?.scrollToEnd({ animated: true })}
-                                    />
-                                    <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowConfirmPassword((v) => !v)}>
-                                        <Text>👁️</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-
-                            <View style={styles.submitContainer}>
+                        <View style={styles.bannerContainer}>
+                            <View style={styles.bannerOverlay}>
                                 <TouchableOpacity
-                                    style={[styles.submitBtn, !canSubmit && styles.submitBtnDisabled]}
-                                    activeOpacity={0.9}
-                                    disabled={!canSubmit}
-                                    onPress={handleSubmit}
+                                    style={styles.backBtn}
+                                    activeOpacity={0.8}
+                                    onPress={() => router.back()}
                                 >
-                                    <Text style={styles.submitBtnText}>Reset Password</Text>
+                                    <Text style={styles.backIcon}>‹</Text>
                                 </TouchableOpacity>
                             </View>
+                        </View>
+
+                        <View style={styles.contentArea}>
+                            <View style={styles.textContainer}>
+                                <Text style={styles.title}>Reset Password</Text>
+                            </View>
+                        </View>
+
+                        <View style={styles.formContainer}>
+                            <BlurView intensity={25} tint="light" style={styles.formBlur} />
+                            <LinearGradient
+                                colors={["rgba(255,255,255,0.2)", "rgba(255,255,255,0.1)"]}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 1 }}
+                                style={styles.formSheen}
+                            />
+                            <Text style={styles.tipTitle}>*Your new password should be at least 8
+                                characters, including a number and a
+                                special character</Text>
+
+                            <Text style={styles.inputLabel}>*New password</Text>
+                            <View style={styles.passwordContainer}>
+                                <TextInput
+                                    style={styles.passwordInput}
+                                    placeholder="New password"
+                                    placeholderTextColor="rgba(0, 0, 0, 0.7)"
+                                    secureTextEntry={!showPassword}
+                                    value={password}
+                                    onChangeText={setPassword}
+                                    onFocus={() => scrollRef.current?.scrollTo({ y: 400, animated: true })}
+                                />
+                                <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword((v) => !v)}>
+                                    <Text>👁️</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            <View style={styles.strengthRow}>
+                                <View style={styles.strengthBarBg}>
+                                    <View style={[styles.strengthBarFill, { width: `${(strengthScore / 5) * 100}%`, backgroundColor: strengthColor }]} />
+                                </View>
+                                <Text style={[styles.strengthLabel, { color: strengthColor }]}>{strengthLabel}</Text>
+                            </View>
+
+                            <Text style={[styles.inputLabel, { marginTop: 16 }]}>*Confirm password</Text>
+                            <View style={styles.passwordContainer}>
+                                <TextInput
+                                    style={styles.passwordInput}
+                                    placeholder="Confirm password"
+                                    placeholderTextColor="rgba(0, 0, 0, 0.7)"
+                                    secureTextEntry={!showConfirmPassword}
+                                    value={confirmPassword}
+                                    onChangeText={setConfirmPassword}
+                                    onFocus={() => scrollRef.current?.scrollToEnd({ animated: true })}
+                                />
+                                <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowConfirmPassword((v) => !v)}>
+                                    <Text>👁️</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        <View style={styles.submitContainer}>
+                            <TouchableOpacity
+                                style={[styles.submitBtn, !canSubmit && styles.submitBtnDisabled]}
+                                activeOpacity={0.9}
+                                disabled={!canSubmit}
+                                onPress={handleSubmit}
+                            >
+                                <BlurView intensity={20} tint="light" style={styles.submitBtnBlur} />
+                                <LinearGradient
+                                    colors={["rgba(255, 215, 0, 0.3)", "rgba(218, 165, 32, 0.2)", "rgba(184, 134, 11, 0.15)"]}
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 1 }}
+                                    style={styles.submitBtnSheen}
+                                />
+                                <Text style={styles.submitBtnText}>Reset Password</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </ScrollView>
@@ -157,40 +163,27 @@ export default function ResetPasswordScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5'
+        backgroundColor: '#3B1D12',
+    },
+    bgImage: {
+        ...StyleSheet.absoluteFillObject,
     },
     overlay: {
-        flex: 1
-    },
-    cardContainer: {
-        backgroundColor: '#fff',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
         flex: 1,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
-        shadowOffset: { width: 0, height: -5 },
-        elevation: 5
+        justifyContent: 'flex-start',
+        paddingTop: 20,
     },
     bannerContainer: {
-        height: 120,
+        height: 80,
         position: 'relative'
-    },
-    waveImage: {
-        width: '100%',
-        height: 300,
-        position: 'absolute',
-        top: 0,
-        left: 0
     },
     bannerOverlay: {
         position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
-        height: 120,
-        paddingTop: 50,
+        height: 80,
+        paddingTop: 30,
         paddingHorizontal: 20,
         flexDirection: 'row',
         alignItems: 'flex-start'
@@ -217,60 +210,81 @@ const styles = StyleSheet.create({
     contentArea: {
         flexDirection: 'row',
         paddingHorizontal: 20,
-        paddingVertical: 20,
+        paddingVertical: 0,
         alignItems: 'flex-start',
-        minHeight: 120
+        minHeight: 40,
+        marginTop: 30,
     },
     textContainer: {
-        paddingTop: 75,
+        paddingTop: 0,
         flex: 1,
         paddingRight: 20,
         justifyContent: 'center'
     },
-    illustrationContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 120,
-        height: 120
-    },
-    logo: {
-        width: 120,
-        height: 180
-    },
     title: {
-        fontSize: 32,
+        fontSize: 40,
         fontWeight: 'bold',
-        color: '#000'
+        color: '#ffffffff',
+        lineHeight: 36,
+        marginBottom: 0,
+        textShadowColor: 'rgba(0, 0, 0, 0.8)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 3,
     },
     formContainer: {
-        backgroundColor: '#BC6135',
+        backgroundColor: 'rgba(188, 97, 53, 0.15)',
         marginHorizontal: 20,
         borderRadius: 15,
         padding: 20,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.3)',
+        overflow: 'hidden',
         shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        shadowOffset: { width: 0, height: 4 },
-        elevation: 4
+        shadowOpacity: 0.3,
+        shadowRadius: 15,
+        shadowOffset: { width: 0, height: 8 },
+        elevation: 8,
+        marginTop: 50,
+    },
+    formBlur: {
+        ...StyleSheet.absoluteFillObject,
+        borderRadius: 15,
+    },
+    formSheen: {
+        ...StyleSheet.absoluteFillObject,
+        borderRadius: 15,
     },
     tipTitle: {
-        color: '#fff',
+        color: '#FFFFFF',
         fontSize: 14,
         fontWeight: 'bold',
-        marginBottom: 12
+        marginBottom: 12,
+        textShadowColor: 'rgba(0, 0, 0, 0.8)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 2,
     },
     inputLabel: {
-        color: '#fff',
+        color: '#FFFFFF',
         fontSize: 16,
         fontWeight: 'bold',
-        marginBottom: 8
+        marginBottom: 8,
+        textShadowColor: 'rgba(0, 0, 0, 0.8)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 2,
     },
     passwordContainer: {
         position: 'relative',
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
         borderRadius: 12,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.5)',
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        shadowOffset: { width: 0, height: 2 },
+        elevation: 2
     },
     passwordInput: {
         flex: 1,
@@ -289,7 +303,7 @@ const styles = StyleSheet.create({
     },
     strengthBarBg: {
         height: 8,
-        backgroundColor: '#E9E9E9',
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
         borderRadius: 8,
         overflow: 'hidden'
     },
@@ -300,7 +314,10 @@ const styles = StyleSheet.create({
     strengthLabel: {
         marginTop: 6,
         fontSize: 12,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        textShadowColor: 'rgba(0, 0, 0, 0.8)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 2,
     },
     submitContainer: {
         paddingHorizontal: 20,
@@ -308,25 +325,40 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     submitBtn: {
-        backgroundColor: '#BC6135',
+        backgroundColor: 'rgba(218, 165, 32, 0.2)',
         borderRadius: 15,
         paddingVertical: 16,
         paddingHorizontal: 20,
         alignItems: 'center',
         width: '100%',
+        borderWidth: 1,
+        borderColor: 'rgba(255, 215, 0, 0.4)',
+        overflow: 'hidden',
         shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        shadowOffset: { width: 0, height: 2 },
-        elevation: 3
+        shadowOpacity: 0.3,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 6 },
+        elevation: 6
     },
     submitBtnDisabled: {
         opacity: 0.6
     },
     submitBtnText: {
-        color: '#fff',
-        fontSize: 20,
-        fontWeight: 'bold'
+        color: '#FFFFFF',
+        fontSize: 18,
+        fontWeight: 'bold',
+        zIndex: 1,
+        textShadowColor: 'rgba(0, 0, 0, 0.8)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 3,
+    },
+    submitBtnBlur: {
+        ...StyleSheet.absoluteFillObject,
+        borderRadius: 15,
+    },
+    submitBtnSheen: {
+        ...StyleSheet.absoluteFillObject,
+        borderRadius: 15,
     }
 });
 
