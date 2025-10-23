@@ -3,10 +3,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ImageBackground, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, Modal, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function MainMenuScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [showProgressModal, setShowProgressModal] = useState(false);
   
   const tiles = [
@@ -36,7 +38,7 @@ export default function MainMenuScreen() {
   const progressPercentage = (completedCount / totalTopics) * 100;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
       <MainMenuHeader />
       <ImageBackground 
         source={require('@/assets/images/main-menu.jpg')} 

@@ -1,12 +1,16 @@
 import OnboardingVideo from '@/components/onboarding-video';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Step = 1 | 2 | 3 | 4;
 
 export default function GetStartedUnifiedScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [step, setStep] = useState<Step>(1);
   const [direction, setDirection] = useState<'none' | 'forward' | 'backward'>('none');
   const [selection, setSelection] = useState<Record<string, string | null>>({
@@ -56,7 +60,7 @@ export default function GetStartedUnifiedScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
       <OnboardingVideo
         segmentIndex={step}
         totalSegments={4}
@@ -99,6 +103,13 @@ export default function GetStartedUnifiedScreen() {
         </View>
 
         <TouchableOpacity style={styles.nextBtn} activeOpacity={0.9} onPress={onNext}>
+          <BlurView intensity={20} tint="light" style={styles.nextBtnBlur} />
+          <LinearGradient
+            colors={["rgba(255,255,255,0.25)", "rgba(255,255,255,0.1)"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.nextBtnSheen}
+          />
           <Text style={styles.nextBtnText}>{step < 4 ? 'Next' : 'Finish'}</Text>
         </TouchableOpacity>
       </View>
@@ -194,20 +205,30 @@ const styles = StyleSheet.create({
   nextBtn: {
     marginHorizontal: 16,
     marginBottom: 24,
-    backgroundColor: '#B05C37',
+    backgroundColor: 'rgba(176, 92, 55, 0.15)',
     borderRadius: 28,
     alignItems: 'center',
     paddingVertical: 14,
-    shadowColor: '#000',
-    shadowOpacity: 0.18,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    overflow: 'hidden',
   },
   nextBtnText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 22,
     fontWeight: '700',
+    zIndex: 1,
+    textShadowColor: 'rgba(0, 0, 0, 0.6)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  nextBtnBlur: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 28,
+  },
+  nextBtnSheen: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 28,
   },
 });
 

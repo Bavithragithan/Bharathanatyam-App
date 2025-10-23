@@ -3,9 +3,11 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function OtpVerificationScreen() {
     const router = useRouter();
+    const insets = useSafeAreaInsets();
     const [otp, setOtp] = useState<string[]>(['', '', '', '']);
     const [seconds, setSeconds] = useState<number>(30);
     const inputsRef = useRef<Array<TextInput | null>>([null, null, null, null]);
@@ -55,7 +57,7 @@ export default function OtpVerificationScreen() {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
             <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
             <View style={styles.overlay}>

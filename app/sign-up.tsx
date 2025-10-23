@@ -1,11 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SignUpScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -101,17 +105,17 @@ export default function SignUpScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
+      <Image
+        source={require('@/assets/images/welcome.jpeg')}
+        contentFit="cover"
+        style={styles.bgImage}
+        cachePolicy="memory-disk"
+      />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
       <View style={styles.overlay}>
-        <View style={styles.cardContainer}>
-          <View style={styles.bannerContainer}>
-            <Image
-              source={require('@/assets/images/wave.png')}
-              style={styles.waveImage}
-              contentFit="cover"
-            />
+        <View style={styles.bannerContainer}>
             <View style={styles.bannerOverlay}>
               <TouchableOpacity
                 style={styles.backBtn}
@@ -129,22 +133,22 @@ export default function SignUpScreen() {
               <Text style={styles.subtitle}>your account</Text>
             </View>
 
-            <View style={styles.illustrationContainer}>
-              <Image
-                source={require('@/assets/images/logo-2.png')}
-                style={styles.logo}
-                contentFit="contain"
-              />
-            </View>
           </View>
 
             <View style={styles.formContainer}>
+              <BlurView intensity={25} tint="light" style={styles.formBlur} />
+              <LinearGradient
+                colors={["rgba(255,255,255,0.2)", "rgba(255,255,255,0.1)"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.formSheen}
+              />
               <View style={styles.inputContainer}>
                 <View>
                   <TextInput
                     style={[styles.input, nameError ? styles.inputError : null]}
                     placeholder="Name"
-                    placeholderTextColor="#999"
+                    placeholderTextColor="rgba(0, 0, 0, 0.7)"
                     value={formData.name}
                     onChangeText={(value) => handleInputChange('name', value)}
                   />
@@ -156,7 +160,7 @@ export default function SignUpScreen() {
                   <TextInput
                     style={[styles.input, emailPhoneError ? styles.inputError : null]}
                     placeholder="Email / Phone Number"
-                    placeholderTextColor="#999"
+                    placeholderTextColor="rgba(0, 0, 0, 0.7)"
                     value={formData.email}
                     onChangeText={(value) => handleInputChange('email', value)}
                     keyboardType="email-address"
@@ -171,7 +175,7 @@ export default function SignUpScreen() {
                     <TextInput
                       style={styles.passwordInput}
                       placeholder="Password"
-                      placeholderTextColor="#999"
+                      placeholderTextColor="rgba(0, 0, 0, 0.7)"
                       value={formData.password}
                       onChangeText={(value) => handleInputChange('password', value)}
                       secureTextEntry={!showPassword}
@@ -183,7 +187,7 @@ export default function SignUpScreen() {
                       <Ionicons
                         name={showPassword ? 'eye' : 'eye-off'}
                         size={20}
-                        color="#999"
+                        color="rgba(0, 0, 0, 0.7)"
                       />
                     </TouchableOpacity>
                   </View>
@@ -212,7 +216,7 @@ export default function SignUpScreen() {
                   <TextInput
                     style={styles.passwordInput}
                     placeholder="Confirm Password"
-                    placeholderTextColor="#999"
+                    placeholderTextColor="rgba(0, 0, 0, 0.7)"
                     value={formData.confirmPassword}
                     onChangeText={(value) => handleInputChange('confirmPassword', value)}
                     secureTextEntry={!showConfirmPassword}
@@ -237,6 +241,13 @@ export default function SignUpScreen() {
                 activeOpacity={0.9}
                 onPress={handleSignUp}
               >
+                <BlurView intensity={20} tint="light" style={styles.signupBtnBlur} />
+                <LinearGradient
+                  colors={["rgba(255, 215, 0, 0.3)", "rgba(218, 165, 32, 0.2)", "rgba(184, 134, 11, 0.15)"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.signupBtnSheen}
+                />
                 <Text style={styles.signUpBtnText}>Sign up</Text>
               </TouchableOpacity>
             </View>
@@ -246,7 +257,6 @@ export default function SignUpScreen() {
               <Text style={styles.signInLink}>Sign in here</Text>
             </TouchableOpacity>
           </View>
-        </View>
       </View>
       </ScrollView>
       </KeyboardAvoidingView>
@@ -288,40 +298,51 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5'
+    backgroundColor: '#3B1D12',
+  },
+  bgImage: {
+    ...StyleSheet.absoluteFillObject,
   },
   overlay: {
-    flex: 1
+    flex: 1,
+    justifyContent: 'flex-start',
+    paddingTop: 20,
   },
   cardContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     flex: 1,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: -5 },
-    elevation: 5
+    shadowOpacity: 0.3,
+    shadowRadius: 15,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8,
+    overflow: 'hidden',
+  },
+  cardBlur: {
+    ...StyleSheet.absoluteFillObject,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  cardSheen: {
+    ...StyleSheet.absoluteFillObject,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   bannerContainer: {
-    height: 120,
+    height: 80,
     position: 'relative'
-  },
-  waveImage: {
-    width: '100%',
-    height: 300,
-    position: 'absolute',
-    top: 0,
-    left: 0
   },
   bannerOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: 120,
-    paddingTop: 50,
+    height: 80,
+    paddingTop: 30,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'flex-start'
@@ -348,68 +369,91 @@ const styles = StyleSheet.create({
   contentArea: {
     flexDirection: 'row',
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingVertical: 0,
     alignItems: 'flex-start',
-    minHeight: 120
+    minHeight: 40,
+    marginTop: 50,
   },
   textContainer: {
-    paddingTop: 110,
+    paddingTop: 0,
     flex: 1,
     paddingRight: 20,
     justifyContent: 'center'
   },
-  illustrationContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 120,
-    height: 120,
-  },
-  logo: {
-    width: 120,
-    height: 180
-  },
   title: {
     fontSize: 40,
     fontWeight: 'bold',
-    color: '#000',
+    color: '#FFFFFF',
     lineHeight: 36,
-    marginBottom: 2
+    marginBottom: 2,
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
   },
   subtitle: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: '#000',
+    color: '#FFFFFF',
     lineHeight: 36,
-    marginTop: 0
+    marginTop: 0,
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
   },
   formContainer: {
-    backgroundColor: '#BC6135',
+    backgroundColor: 'rgba(188, 97, 53, 0.15)',
     marginHorizontal: 20,
     borderRadius: 15,
     padding: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    overflow: 'hidden',
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4
+    shadowOpacity: 0.3,
+    shadowRadius: 15,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8,
+    marginTop: 70,
+  },
+  formBlur: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 15,
+  },
+  formSheen: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 15,
   },
   inputContainer: {
     gap: 16,
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: '#000'
+    color: '#000',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2
   },
   passwordContainer: {
     position: 'relative',
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 12,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2
   },
   passwordInput: {
     flex: 1,
@@ -428,22 +472,37 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   signUpBtn: {
-    backgroundColor: '#BC6135',
+    backgroundColor: 'rgba(218, 165, 32, 0.2)',
     borderRadius: 15,
     paddingVertical: 16,
     paddingHorizontal: 20,
     alignItems: 'center',
     width: '100%',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 215, 0, 0.4)',
+    overflow: 'hidden',
     shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 6
   },
   signUpBtnText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    zIndex: 1,
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
+  },
+  signupBtnBlur: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 15,
+  },
+  signupBtnSheen: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 15,
   },
   signInContainer: {
     flexDirection: 'row',
@@ -453,13 +512,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10
   },
   signInText: {
-    color: '#000',
-    fontSize: 16
+    color: '#FFFFFF',
+    fontSize: 16,
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   signInLink: {
-    color: '#000',
+    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
-    textDecorationLine: 'underline'
+    textDecorationLine: 'underline',
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   }
 });

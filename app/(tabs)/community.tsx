@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Header from '../../components/ui/Header';
 import { communityTabs } from '../../data.js';
 import Challenges from '../components/community/Challenges';
@@ -19,6 +20,7 @@ import OnlineEvents from '../components/community/OnlineEvents';
 const { width: screenWidth } = Dimensions.get('window');
 
 export default function CommunityScreen() {
+  const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState('Games');
   const flatListRef = useRef<FlatList<any>>(null);
   const tabClick = useRef(false);
@@ -51,7 +53,7 @@ export default function CommunityScreen() {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
       <Header title="Community" backgroundColor="#FDF2F8" />
 
       <View style={styles.tabsContainer}>
