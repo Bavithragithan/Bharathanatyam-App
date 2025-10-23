@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { useRef, useState } from 'react';
 import { Dimensions, FlatList, ImageBackground, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -201,6 +202,7 @@ const styles = StyleSheet.create({
     width: '100%',
     flex: 1,
     justifyContent: 'center',
+    minHeight: '100%',
   },
   hotspot: {
     position: 'absolute',

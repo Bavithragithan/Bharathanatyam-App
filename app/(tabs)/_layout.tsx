@@ -26,11 +26,12 @@ export default function TabLayout() {
         tabBarBackground: () => (
           <View style={styles.tabBarBackground}>
             <LinearGradient
-              colors={['#B8732F', '#A0522D']}
+              colors={['#C27A36', '#8F4B2A']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               style={styles.gradient}
             />
+            <View style={styles.glassOverlay} />
           </View>
         ),
         tabBarLabelStyle: {
@@ -130,13 +131,26 @@ const styles = StyleSheet.create({
       width: 0,
       height: -2,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 8,
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 12,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.2)',
   },
   gradient: {
     flex: 1,
     borderRadius: 0,
+  },
+  glassOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(5px)',
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.15)',
   },
   iconContainer: {
     width: 50,
@@ -145,20 +159,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(2px)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   activeIconContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
     transform: [{ translateY: -15 }],
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 6,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
     elevation: 10,
-    borderWidth: 4,
-    borderColor: '#B8732F',
+    borderWidth: 3,
+    borderColor: 'rgba(184, 115, 47, 0.9)',
+    backdropFilter: 'blur(5px)',
   },
   iconImage: {
     width: 24,

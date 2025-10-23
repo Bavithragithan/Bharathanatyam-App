@@ -3,15 +3,16 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
-    Dimensions,
-    FlatList,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  Dimensions,
+  FlatList,
+  ImageBackground,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import Header from '../../components/ui/Header';
 import { searchWorkouts } from '../../data';
@@ -35,84 +36,92 @@ export default function WorkoutsScreen() {
   };
 
   const renderWorkoutCard = ({ item }: { item: any }) => (
-    <TouchableOpacity 
-      style={styles.workoutCard} 
-      activeOpacity={0.8}
-      onPress={() => handleWorkoutPress(item)}
-    >
-      <View style={styles.thumbnailContainer}>
-        <Image source={item.thumbnail} style={styles.thumbnail} contentFit="cover" />
-        <View style={styles.playButton}>
-          <Ionicons name="play" size={20} color="#FFFFFF" />
-        </View>
-        <View style={styles.durationBadge}>
-          <Text style={styles.durationText}>{item.duration}</Text>
-        </View>
+    <View style={styles.workoutCard}>
+      <View style={styles.glassCardContent}>
+        <TouchableOpacity 
+          style={styles.cardTouchable} 
+          activeOpacity={0.8}
+          onPress={() => handleWorkoutPress(item)}
+        >
+          <View style={styles.thumbnailContainer}>
+            <Image source={item.thumbnail} style={styles.thumbnail} contentFit="cover" />
+            <View style={styles.playButton}>
+              <Ionicons name="play" size={20} color="#FFFFFF" />
+            </View>
+            <View style={styles.durationBadge}>
+              <Text style={styles.durationText}>{item.duration}</Text>
+            </View>
+          </View>
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>{item.title}</Text>
+            <Text style={styles.cardDescription} numberOfLines={3}>
+              {item.description}
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
-      <View style={styles.cardContent}>
-        <Text style={styles.cardTitle}>{item.title}</Text>
-        <Text style={styles.cardDescription} numberOfLines={3}>
-          {item.description}
-        </Text>
-      </View>
-    </TouchableOpacity>
+    </View>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Workouts" />
+      <Header title="Workouts" backgroundColor="#FDF2F8" />
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.searchContainer}>
-          <View style={styles.searchBox}>
+      <ImageBackground
+        source={require('@/assets/images/main-menu.jpeg')}
+        style={[styles.content, { flex: 1 }]}
+        imageStyle={{ resizeMode: 'cover', opacity: 0.9 }}
+      >
+        <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
+          <View style={styles.searchContainer}>
             <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
             <TextInput
               style={styles.searchInput}
-              placeholder="Search Here"
+              placeholder="Search Workouts"
               placeholderTextColor="#999"
               value={searchQuery}
               onChangeText={setSearchQuery}
             />
           </View>
-        </View>
 
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false} 
-          style={styles.categoriesContainer}
-          contentContainerStyle={styles.categoriesContent}
-        >
-          {categories.map((category) => (
-            <TouchableOpacity
-              key={category}
-              style={[
-                styles.categoryButton,
-                activeCategory === category && styles.activeCategoryButton
-              ]}
-              onPress={() => setActiveCategory(category)}
-            >
-              <Text style={[
-                styles.categoryText,
-                activeCategory === category && styles.activeCategoryText
-              ]}>
-                {category}
-              </Text>
-            </TouchableOpacity>
-          ))}
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            style={styles.categoriesContainer}
+            contentContainerStyle={styles.categoriesContent}
+          >
+            {categories.map((category) => (
+              <TouchableOpacity
+                key={category}
+                style={[
+                  styles.categoryButton,
+                  activeCategory === category && styles.activeCategoryButton
+                ]}
+                onPress={() => setActiveCategory(category)}
+              >
+                <Text style={[
+                  styles.categoryText,
+                  activeCategory === category && styles.activeCategoryText
+                ]}>
+                  {category}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          <View style={styles.cardsContainer}>
+            <FlatList
+              data={filteredWorkouts}
+              renderItem={renderWorkoutCard}
+              keyExtractor={(item) => item.id}
+              numColumns={2}
+              columnWrapperStyle={styles.row}
+              scrollEnabled={false}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
         </ScrollView>
-
-        <View style={styles.cardsContainer}>
-          <FlatList
-            data={filteredWorkouts}
-            renderItem={renderWorkoutCard}
-            keyExtractor={(item) => item.id}
-            numColumns={2}
-            columnWrapperStyle={styles.row}
-            scrollEnabled={false}
-            showsVerticalScrollIndicator={false}
-          />
-        </View>
-      </ScrollView>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -120,28 +129,34 @@ export default function WorkoutsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9EDEF',
+    backgroundColor: '#FDF2F8',
     paddingTop: 20,
   },
   content: {
     flex: 1,
+  },
+  scrollContent: {
+    flex: 1,
     paddingHorizontal: 20,
   },
   searchContainer: {
-    marginBottom: 20,
-  },
-  searchBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    paddingHorizontal: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
+    marginTop: 15,
+    marginBottom: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 2,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
   },
@@ -164,19 +179,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 6,
     borderRadius: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
     marginRight: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 2,
     elevation: 2,
   },
   activeCategoryButton: {
-    backgroundColor: '#B75F37',
+    backgroundColor: 'rgba(183, 95, 55, 0.8)',
+    borderColor: 'rgba(183, 95, 55, 0.3)',
   },
   categoryText: {
     fontSize: 12,
@@ -195,18 +214,28 @@ const styles = StyleSheet.create({
   },
   workoutCard: {
     width: cardWidth,
-    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     marginBottom: 20,
-    // shadowColor: '#000',
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 4,
-    // },
-    // shadowOpacity: 0.1,
-    // shadowRadius: 8,
-    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 5,
     overflow: 'hidden',
+  },
+  glassCardContent: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    overflow: 'hidden',
+  },
+  cardTouchable: {
+    flex: 1,
   },
   thumbnailContainer: {
     position: 'relative',

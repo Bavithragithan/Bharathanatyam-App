@@ -15,10 +15,12 @@ const { width } = Dimensions.get('window');
 export default function OnlineEvents() {
   const renderEventCard = (event: any) => (
     <View key={event.id} style={styles.eventCard}>
-      <Image source={event.image} style={styles.eventImage} />
-      <TouchableOpacity style={styles.bookButton}>
-        <Text style={styles.bookButtonText}>Book Now</Text>
-      </TouchableOpacity>
+      <View style={styles.glassCardContent}>
+        <Image source={event.image} style={styles.eventImage} />
+        <TouchableOpacity style={styles.bookButton}>
+          <Text style={styles.bookButtonText}>Book Now</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -45,7 +47,6 @@ const styles = StyleSheet.create({
   },
   eventCard: {
     width: (width - 60) / 2,
-    backgroundColor: '#FFFFFF',
     borderRadius: 15,
     marginBottom: 20,
     shadowColor: '#000',
@@ -53,9 +54,17 @@ const styles = StyleSheet.create({
       width: 0,
       height: 4,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 6,
     elevation: 5,
+    overflow: 'hidden',
+  },
+  glassCardContent: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     overflow: 'hidden',
   },
   eventImage: {
@@ -75,6 +84,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   bottomSpacing: {
     height: 100,

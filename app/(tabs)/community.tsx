@@ -1,8 +1,8 @@
-import { Ionicons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import {
     Dimensions,
     FlatList,
+    ImageBackground,
     SafeAreaView,
     StyleSheet,
     Text,
@@ -71,23 +71,28 @@ export default function CommunityScreen() {
         ))}
       </View>
 
-
-      <FlatList
-        ref={flatListRef}
-        data={tabContent}
-        renderItem={({ item }) => (
-          <View style={{ width: screenWidth, flex: 1 }}>
-            {item.component}
-          </View>
-        )}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        keyExtractor={(item) => item.key}
-        style={styles.content}
-      />
+      <ImageBackground
+        source={require('@/assets/images/main-menu.jpeg')}
+        style={[styles.content, { flex: 1 }]}
+        imageStyle={{ resizeMode: 'cover', opacity: 0.9 }}
+      >
+        <FlatList
+          ref={flatListRef}
+          data={tabContent}
+          renderItem={({ item }) => (
+            <View style={{ width: screenWidth, flex: 1 }}>
+              {item.component}
+            </View>
+          )}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          keyExtractor={(item) => item.key}
+          style={styles.content}
+        />
+      </ImageBackground>
     </SafeAreaView>
   );
 }

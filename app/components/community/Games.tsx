@@ -2,14 +2,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-  Dimensions,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Dimensions,
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import { bharatanatyamGames } from '../../../data.js';
 
@@ -42,20 +42,22 @@ export default function Games() {
 
   const renderGameCard = (game: any, index: number) => (
     <View key={game.id} style={styles.gameCard}>
-      <View style={styles.gameImageContainer}>
-        <Image source={game.image} style={styles.gameImage} />
-        <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyColor(game.difficulty) }]}>
-          <Text style={styles.difficultyText}>{game.difficulty}</Text>
+      <View style={styles.glassCardContent}>
+        <View style={styles.gameImageContainer}>
+          <Image source={game.image} style={styles.gameImage} />
+          <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyColor(game.difficulty) }]}>
+            <Text style={styles.difficultyText}>{game.difficulty}</Text>
+          </View>
         </View>
+        <Text style={styles.gameTitle}>{game.title}</Text>
+        <View style={styles.gameStats}>
+          <Text style={styles.pointsText}>🏆 {game.points} pts</Text>
+          <Text style={styles.timeText}>⏱️ {game.timeLimit}s</Text>
+        </View>
+        <TouchableOpacity style={styles.playButton} onPress={() => handlePlayGame(game)}>
+          <Text style={styles.playButtonText}>Play Now</Text>
+        </TouchableOpacity>
       </View>
-      <Text style={styles.gameTitle}>{game.title}</Text>
-      <View style={styles.gameStats}>
-        <Text style={styles.pointsText}>🏆 {game.points} pts</Text>
-        <Text style={styles.timeText}>⏱️ {game.timeLimit}s</Text>
-      </View>
-      <TouchableOpacity style={styles.playButton} onPress={() => handlePlayGame(game)}>
-        <Text style={styles.playButtonText}>Play Now</Text>
-      </TouchableOpacity>
     </View>
   );
 
@@ -92,19 +94,27 @@ const styles = StyleSheet.create({
   },
   gameCard: {
     width: (width - 60) / 2,
-    backgroundColor: '#FFFFFF',
     borderRadius: 15,
-    padding: 15,
     marginBottom: 20,
-    alignItems: 'center',
+    overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 4,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 6,
     elevation: 5,
+  },
+  glassCardContent: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    padding: 15,
+    alignItems: 'center',
   },
   gameImageContainer: {
     width: 130,
@@ -157,6 +167,9 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 5,
     textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   playButton: {
     backgroundColor: '#B8732F',
@@ -175,19 +188,22 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
     marginHorizontal: 20,
     marginTop: 15,
     marginBottom: 15,
     paddingHorizontal: 15,
     paddingVertical: 2,
     borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
   },
