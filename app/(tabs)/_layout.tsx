@@ -12,7 +12,7 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: 'transparent',
           borderTopWidth: 0,
-          height: 80,
+          height: 100,
           paddingBottom: 10,
           paddingTop: 15,
           paddingHorizontal: 0,
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: 15,
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
     backdropFilter: 'blur(2px)',
     borderWidth: 1,
