@@ -34,7 +34,7 @@ export default function TheoryScreen() {
   const HistoryContent = () => (
     <ImageBackground
       source={require('@/assets/images/history.jpeg')}
-      style={styles.scrollContainer}
+      style={[styles.scrollContainer, { flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }]}
       imageStyle={{ resizeMode: 'cover' , opacity: 0.9}}
     >
       <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.contentSection}>
@@ -228,28 +228,36 @@ export default function TheoryScreen() {
   ];
 
   const TheoryContent = () => (
-    <FlatList
-      data={theoryTopics}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          key={item.key}
-          style={styles.theoryCard}
-          onPress={() => {
-            router.push({
-              pathname: '/theory-topic',
-              params: { topic: item.key },
-            } as any);
-          }}
-        >
-          <Text style={styles.theoryCardText}>{item.label}</Text>
-        </TouchableOpacity>
-      )}
-      keyExtractor={(item) => item.key}
-      numColumns={2}
-      contentContainerStyle={styles.theoryGridContainer}
-      columnWrapperStyle={styles.theoryGridRow}
-      showsVerticalScrollIndicator={false}
-    />
+    <ImageBackground
+      source={require('@/assets/images/main-menu.jpeg')}
+      style={[styles.scrollContainer, { flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }]}
+      imageStyle={{ resizeMode: 'cover', opacity: 0.9 }}
+    >
+      <FlatList
+        data={theoryTopics}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            key={item.key}
+            style={styles.glassCard}
+            onPress={() => {
+              router.push({
+                pathname: '/theory-topic',
+                params: { topic: item.key },
+              } as any);
+            }}
+          >
+            <View style={styles.glassCardContent}>
+              <Text style={styles.glassCardText}>{item.label}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+        keyExtractor={(item) => item.key}
+        numColumns={2}
+        contentContainerStyle={styles.glassGridContainer}
+        columnWrapperStyle={styles.glassGridRow}
+        showsVerticalScrollIndicator={false}
+      />
+    </ImageBackground>
   );
 
   const tabContent = [
@@ -258,7 +266,7 @@ export default function TheoryScreen() {
   ];
 
   return (
-    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
+    <SafeAreaView style={[styles.container, { paddingBottom: 0 }]}>
       <Header title="Theory" />
 
       <View style={styles.content}>
@@ -327,6 +335,48 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  // Glass effect styles
+  glassGridContainer: {
+    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  glassGridRow: {
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  glassCard: {
+    width: 150,
+    height: 90,
+    margin: 8,
+    borderRadius: 16,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  glassCardContent: {
+    flex: 1,
+    backgroundColor: 'rgba(178, 91, 42, 0.8)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(178, 91, 42, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  glassCardText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
   newBadge: {
     position: 'absolute',
     top: 8,
@@ -338,14 +388,14 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#F9EDEF',
+    backgroundColor: 'transparent',
     paddingTop: 20
   },
 
 
   content: {
     flex: 1,
-    backgroundColor: '#F9EDEF',
+    backgroundColor: 'transparent',
   },
 
   tabsContainer: {

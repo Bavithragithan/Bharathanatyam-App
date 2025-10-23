@@ -1,8 +1,8 @@
-import { Ionicons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import {
     Dimensions,
     FlatList,
+    ImageBackground,
     SafeAreaView,
     StyleSheet,
     Text,
@@ -53,7 +53,7 @@ export default function CommunityScreen() {
   ];
 
   return (
-    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
+    <SafeAreaView style={[styles.container, { paddingBottom: 0 }]}>
       <Header title="Community" backgroundColor="#FDF2F8" />
 
       <View style={styles.tabsContainer}>
@@ -71,23 +71,28 @@ export default function CommunityScreen() {
         ))}
       </View>
 
-
-      <FlatList
-        ref={flatListRef}
-        data={tabContent}
-        renderItem={({ item }) => (
-          <View style={{ width: screenWidth, flex: 1 }}>
-            {item.component}
-          </View>
-        )}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        keyExtractor={(item) => item.key}
-        style={styles.content}
-      />
+      <ImageBackground
+        source={require('@/assets/images/main-menu.jpeg')}
+        style={[styles.content, { flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }]}
+        imageStyle={{ resizeMode: 'cover', opacity: 0.9 }}
+      >
+        <FlatList
+          ref={flatListRef}
+          data={tabContent}
+          renderItem={({ item }) => (
+            <View style={{ width: screenWidth, flex: 1 }}>
+              {item.component}
+            </View>
+          )}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          keyExtractor={(item) => item.key}
+          style={styles.content}
+        />
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -95,7 +100,7 @@ export default function CommunityScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FDF2F8',
+    backgroundColor: 'transparent',
     paddingTop: 20,
   },
   tabsContainer: {

@@ -2,16 +2,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import {
-  Dimensions,
-  FlatList,
-  Modal,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Dimensions,
+    FlatList,
+    ImageBackground,
+    Modal,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Header from '../../components/ui/Header';
@@ -165,91 +166,107 @@ export default function ChoreographyScreen() {
       </View>
       
       <View style={styles.liveClassCard}>
-        <View style={styles.liveClassContent}>
-          <View style={styles.liveClassInfo}>
-            <Text style={styles.liveClassTitle}>Bharatanatyam Adavus - Intermediate</Text>
-            <Text style={styles.liveClassDescription}>Next session: Today, 6:00 PM IST</Text>
-            <View style={styles.liveRow}>
-              <View style={styles.liveBadge}>
-                <Text style={styles.liveBadgeText}>LIVE</Text>
+        <View style={styles.glassCardContent}>
+          <View style={styles.liveClassContent}>
+            <View style={styles.liveClassInfo}>
+              <Text style={styles.liveClassTitle}>Bharatanatyam Adavus - Intermediate</Text>
+              <Text style={styles.liveClassDescription}>Next session: Today, 6:00 PM IST</Text>
+              <View style={styles.liveRow}>
+                <View style={styles.liveBadge}>
+                  <Text style={styles.liveBadgeText}>LIVE</Text>
+                </View>
+                <Text style={styles.liveStatus}>Join now for live instruction</Text>
               </View>
-              <Text style={styles.liveStatus}>Join now for live instruction</Text>
             </View>
           </View>
+          <TouchableOpacity
+            style={styles.joinButton}
+            onPress={() =>
+              router.push({
+                pathname: '../live-class',
+                params: {
+                  name: teachers[0].name,
+                  title: teachers[0].title,
+                  experience: teachers[0].experience,
+                },
+              })
+            }
+          >
+            <Text style={styles.joinButtonText}>Join Class</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.joinButton}
-          onPress={() =>
-            router.push({
-              pathname: '../live-class',
-              params: {
-                name: teachers[0].name,
-                title: teachers[0].title,
-                experience: teachers[0].experience,
-              },
-            })
-          }
-        >
-          <Text style={styles.joinButtonText}>Join Class</Text>
-        </TouchableOpacity>
       </View>
       
-      <View style={styles.bottomSpacing} />
     </ScrollView>
   );
 
-  const TeachersComponent = () => (
-    <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
-      <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search Teachers"
-          placeholderTextColor="#999"
-          value={searchText}
-          onChangeText={setSearchText}
-        />
-      </View>
-      
-      <View style={styles.teachersList}>
-        {teachers.map((teacher) => (
+  const TeachersComponent = () => {
+    const filteredTeachers = teachers.filter(teacher =>
+      teacher.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      teacher.title.toLowerCase().includes(searchText.toLowerCase()) ||
+      teacher.experience.toLowerCase().includes(searchText.toLowerCase())
+    );
+
+    return (
+      <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
+        <View style={styles.searchContainer}>
+          <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search Teachers"
+            placeholderTextColor="#999"
+            value={searchText}
+            onChangeText={setSearchText}
+          />
+        </View>
+        
+        <View style={styles.teachersList}>
+          {filteredTeachers.map((teacher) => (
           <View key={teacher.name} style={styles.teacherCard}>
-            <View style={styles.teacherContent}>
-              <View style={styles.teacherInfo}>
-                <Text style={styles.teacherName}>{teacher.name}</Text>
-                <Text style={styles.teacherTitle}>{teacher.title} • {teacher.experience}</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    setSelectedTeacher(teacher);
-                    setIsAboutVisible(true);
-                  }}
-                >
-                  <Text style={styles.linkText}>About teacher</Text>
-                </TouchableOpacity>
+            <View style={styles.glassCardContent}>
+              <View style={styles.teacherContent}>
+                <View style={styles.teacherInfo}>
+                  <Text style={styles.teacherName}>{teacher.name}</Text>
+                  <Text style={styles.teacherTitle}>{teacher.title} • {teacher.experience}</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSelectedTeacher(teacher);
+                      setIsAboutVisible(true);
+                    }}
+                  >
+                    <Text style={styles.linkText}>About teacher</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
+              <TouchableOpacity
+                style={styles.joinButton}
+                onPress={() =>
+                  router.push({
+                    pathname: '../live-class',
+                    params: {
+                      name: teacher.name,
+                      title: teacher.title,
+                      experience: teacher.experience,
+                    },
+                  })
+                }
+              >
+                <Text style={styles.joinButtonText}>Join Class</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={styles.joinButton}
-              onPress={() =>
-                router.push({
-                  pathname: '../live-class',
-                  params: {
-                    name: teacher.name,
-                    title: teacher.title,
-                    experience: teacher.experience,
-                  },
-                })
-              }
-            >
-              <Text style={styles.joinButtonText}>Join Class</Text>
-            </TouchableOpacity>
           </View>
         ))}
+        
+        {filteredTeachers.length === 0 && searchText.length > 0 && (
+          <View style={styles.noResultsContainer}>
+            <Text style={styles.noResultsText}>No teachers found matching "{searchText}"</Text>
+          </View>
+        )}
       </View>
       
-      <View style={styles.bottomSpacing} />
     </ScrollView>
-  );
+    );
+  };
 
   const CalendarComponent = () => {
     const daysInMonth = getDaysInMonth(currentMonth);
@@ -427,7 +444,6 @@ export default function ChoreographyScreen() {
         )}
 
         
-        <View style={styles.bottomSpacing} />
       </ScrollView>
     );
   };
@@ -439,7 +455,7 @@ export default function ChoreographyScreen() {
   ];
 
   return (
-    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
+    <SafeAreaView style={[styles.container, { paddingBottom: 0 }]}>
       <Header title="Choreography" backgroundColor="#FDF2F8" />
 
       <View style={styles.tabsContainer}>
@@ -457,22 +473,28 @@ export default function ChoreographyScreen() {
         ))}
       </View>
 
-      <FlatList
-        ref={flatListRef}
-        data={tabContent}
-        renderItem={({ item }) => (
-          <View style={{ width: screenWidth, flex: 1 }}>
-            {item.component}
-          </View>
-        )}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        keyExtractor={(item) => item.key}
-        style={styles.content}
-      />
+      <ImageBackground
+        source={require('@/assets/images/main-menu.jpeg')}
+        style={[styles.content, { flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }]}
+        imageStyle={{ resizeMode: 'cover', opacity: 0.9 }}
+      >
+        <FlatList
+          ref={flatListRef}
+          data={tabContent}
+          renderItem={({ item }) => (
+            <View style={{ width: screenWidth, flex: 1 }}>
+              {item.component}
+            </View>
+          )}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          keyExtractor={(item) => item.key}
+          style={styles.content}
+        />
+      </ImageBackground>
 
       <Modal
         visible={isAboutVisible}
@@ -527,7 +549,7 @@ export default function ChoreographyScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FDF2F8',
+    backgroundColor: 'transparent',
     paddingTop: 20,
   },
   tabsContainer: {
@@ -577,18 +599,21 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
     marginTop: 15,
     marginBottom: 15,
     paddingHorizontal: 15,
     paddingVertical: 2,
     borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
   },
@@ -601,17 +626,24 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   liveClassCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 15,
     marginBottom: 15,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 4,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 5,
+    overflow: 'hidden',
+  },
+  glassCardContent: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     overflow: 'hidden',
   },
   liveClassContent: {
@@ -658,17 +690,16 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   teacherCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 15,
     marginBottom: 15,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 4,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 5,
     overflow: 'hidden',
   },
   teacherContent: {
@@ -740,17 +771,17 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   joinButton: {
-    backgroundColor: '#B75F37',
+    backgroundColor: 'rgba(183, 95, 55, 0.8)',
+    backdropFilter: 'blur(10px)',
     paddingVertical: 15,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(183, 95, 55, 0.3)',
   },
   joinButtonText: {
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '600',
-  },
-  bottomSpacing: {
-    height: 100,
   },
   modalBackdrop: {
     flex: 1,
@@ -799,13 +830,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
     marginTop: 15,
     marginBottom: 10,
     borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
   },
@@ -818,13 +852,16 @@ const styles = StyleSheet.create({
     color: '#7A4D3A',
   },
   calendarCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
     borderRadius: 15,
     marginBottom: 15,
     padding: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
   },
@@ -843,13 +880,15 @@ const styles = StyleSheet.create({
   calendarGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
   calendarDay: {
-    width: `${100/7}%`,
+    width: '14.28%',
     aspectRatio: 1,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
+    marginBottom: 8,
   },
   selectedDay: {
     backgroundColor: '#B75F37',
@@ -896,13 +935,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#B75F37',
   },
   classInfoCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
     borderRadius: 15,
     marginBottom: 15,
     padding: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
   },
@@ -1009,13 +1051,16 @@ const styles = StyleSheet.create({
   },
   // Legend Styles
   legendCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
     borderRadius: 15,
     marginBottom: 15,
     padding: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
   },
@@ -1046,14 +1091,17 @@ const styles = StyleSheet.create({
   },
   // No Class Styles
   noClassCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
     borderRadius: 15,
     marginBottom: 15,
     padding: 30,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
   },
@@ -1074,5 +1122,27 @@ const styles = StyleSheet.create({
     color: '#999',
     textAlign: 'center',
     lineHeight: 18,
+  },
+  // No Results Styles
+  noResultsContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: 15,
+    marginTop: 20,
+    padding: 30,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  noResultsText: {
+    fontSize: 16,
+    color: '#A47E74',
+    textAlign: 'center',
+    fontWeight: '600',
   },
 });

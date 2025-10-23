@@ -1,13 +1,15 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import {
-  Dimensions,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
+    Dimensions,
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
 import { chatGroups, personalChats } from '../../../data.js';
 
@@ -16,6 +18,7 @@ const { width } = Dimensions.get('window');
 export default function Chat() {
   const router = useRouter();
   const [activeSubTab, setActiveSubTab] = useState('Group');
+  const [searchText, setSearchText] = useState('');
   const tabClick = useRef(false);
 
   const tabs = ['Group', 'Personal'];
@@ -42,25 +45,40 @@ export default function Chat() {
   };
 
   const renderChatItem = (chat: any) => (
-    <TouchableOpacity key={chat.id} style={styles.chatItem} onPress={() => handleChatPress(chat)}>
-      <Image source={chat.avatar} style={styles.chatAvatar} />
-      <View style={styles.chatContent}>
-        <View style={styles.chatHeader}>
-          <Text style={styles.chatName}>{chat.name}</Text>
-          <View style={styles.chatMeta}>
-            <Text style={styles.chatTime}>• {chat.time}</Text>
-            {chat.unreadCount > 0 && (
-              <View style={styles.unreadBadge}>
-                <Text style={styles.unreadText}>{chat.unreadCount}</Text>
+    <View key={chat.id} style={styles.chatItemContainer}>
+      <View style={styles.glassCardContent}>
+        <TouchableOpacity style={styles.chatItem} onPress={() => handleChatPress(chat)}>
+          <View style={styles.avatarContainer}>
+            <Image source={chat.avatar} style={styles.chatAvatar} />
+            <View style={[styles.statusIndicator, { backgroundColor: chat.isOnline ? '#4CAF50' : '#9E9E9E' }]} />
+          </View>
+          <View style={styles.chatContent}>
+            <View style={styles.chatHeader}>
+              <Text style={styles.chatName}>{chat.name}</Text>
+              <View style={styles.chatMeta}>
+                <Text style={styles.chatTime}>{chat.time}</Text>
+                {chat.unreadCount > 0 && (
+                  <View style={styles.unreadBadge}>
+                    <Text style={styles.unreadText}>{chat.unreadCount}</Text>
+                  </View>
+                )}
               </View>
+            </View>
+            <Text style={styles.chatDescription} numberOfLines={2}>
+              {chat.description}
+            </Text>
+            {chat.lastMessage && (
+              <Text style={styles.lastMessage} numberOfLines={1}>
+                {chat.lastMessage}
+              </Text>
             )}
           </View>
-        </View>
-        <Text style={styles.chatDescription} numberOfLines={1}>
-          {chat.description}
-        </Text>
+          <TouchableOpacity style={styles.moreButton}>
+            <Ionicons name="ellipsis-vertical" size={16} color="#666" />
+          </TouchableOpacity>
+        </TouchableOpacity>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 
   const renderGroupChats = () => (
@@ -70,7 +88,9 @@ export default function Chat() {
           chatGroups.map((chat) => renderChatItem(chat))
         ) : (
           <View style={styles.emptyState}>
+            <Ionicons name="chatbubbles-outline" size={48} color="#999" />
             <Text style={styles.emptyText}>No group chats available</Text>
+            <Text style={styles.emptySubText}>Start a conversation with fellow dancers</Text>
           </View>
         )}
         <View style={styles.bottomSpacing} />
@@ -85,7 +105,9 @@ export default function Chat() {
           personalChats.map((chat) => renderChatItem(chat))
         ) : (
           <View style={styles.emptyState}>
+            <Ionicons name="person-outline" size={48} color="#999" />
             <Text style={styles.emptyText}>No personal chats available</Text>
+            <Text style={styles.emptySubText}>Connect with individual dancers</Text>
           </View>
         )}
         <View style={styles.bottomSpacing} />
@@ -95,13 +117,30 @@ export default function Chat() {
 
   return (
     <View style={styles.container}>
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search chats..."
+          placeholderTextColor="#999"
+          value={searchText}
+          onChangeText={setSearchText}
+        />
+        <TouchableOpacity style={styles.filterButton}>
+          <Ionicons name="filter" size={18} color="#666" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Toggle Tabs */}
       <View style={styles.toggleContainer}>
-        <View style={styles.toggleBackground}>
+        <View style={styles.glassToggleBackground}>
           <View style={[styles.toggleSlider, activeSubTab === 'Personal' && styles.toggleSliderActive]} />
           <TouchableOpacity
             style={[styles.toggleButton, activeSubTab === 'Group' && styles.toggleButtonActive]}
             onPress={() => handleTabChange('Group')}
           >
+            <Ionicons name="people" size={16} color={activeSubTab === 'Group' ? '#FFFFFF' : '#666'} />
             <Text style={[styles.toggleText, activeSubTab === 'Group' && styles.toggleTextActive]}>
               Group
             </Text>
@@ -110,6 +149,7 @@ export default function Chat() {
             style={[styles.toggleButton, activeSubTab === 'Personal' && styles.toggleButtonActive]}
             onPress={() => handleTabChange('Personal')}
           >
+            <Ionicons name="person" size={16} color={activeSubTab === 'Personal' ? '#FFFFFF' : '#666'} />
             <Text style={[styles.toggleText, activeSubTab === 'Personal' && styles.toggleTextActive]}>
               Personal
             </Text>
@@ -117,6 +157,7 @@ export default function Chat() {
         </View>
       </View>
 
+      {/* Content */}
       <View style={styles.content}>
         {activeSubTab === 'Group' ? renderGroupChats() : renderPersonalChats()}
       </View>
@@ -129,18 +170,63 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
   },
+  // Search Bar Styles
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
+    marginHorizontal: 20,
+    marginBottom: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  searchIcon: {
+    marginRight: 10,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: '#333',
+  },
+  filterButton: {
+    padding: 5,
+  },
+  // Toggle Styles
   toggleContainer: {
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingBottom: 5,
+    paddingBottom: 15,
   },
-  toggleBackground: {
+  glassToggleBackground: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
     borderRadius: 25,
     padding: 4,
     position: 'relative',
     width: 320,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   toggleSlider: {
     position: 'absolute',
@@ -155,7 +241,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
   },
@@ -169,6 +255,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1,
+    flexDirection: 'row',
   },
   toggleButtonActive: {
     // No additional styling needed as the slider provides the visual feedback
@@ -177,34 +264,66 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: '#666',
+    marginLeft: 5,
   },
   toggleTextActive: {
     color: '#FFFFFF',
     fontWeight: '600',
   },
+  // Content Styles
   content: {
-    flex: 1,
-  },
-  tabContentContainer: {
-    width: width,
     flex: 1,
   },
   chatList: {
     flex: 1,
     paddingHorizontal: 20,
   },
+  // Chat Item Styles
+  chatItemContainer: {
+    marginBottom: 15,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 5,
+    overflow: 'hidden',
+  },
+  glassCardContent: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    overflow: 'hidden',
+  },
   chatItem: {
     flexDirection: 'row',
     paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    paddingHorizontal: 15,
     alignItems: 'center',
+  },
+  avatarContainer: {
+    position: 'relative',
+    marginRight: 15,
   },
   chatAvatar: {
     width: 50,
     height: 50,
     borderRadius: 25,
-    marginRight: 15,
+  },
+  statusIndicator: {
+    position: 'absolute',
+    bottom: 2,
+    right: 2,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
   chatContent: {
     flex: 1,
@@ -219,6 +338,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
     flex: 1,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   chatMeta: {
     flexDirection: 'row',
@@ -247,10 +369,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     lineHeight: 18,
+    marginBottom: 3,
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
   },
-  bottomSpacing: {
-    height: 100,
+  lastMessage: {
+    fontSize: 13,
+    color: '#999',
+    fontStyle: 'italic',
   },
+  moreButton: {
+    padding: 8,
+    marginLeft: 10,
+  },
+  // Empty State Styles
   emptyState: {
     flex: 1,
     justifyContent: 'center',
@@ -258,8 +391,25 @@ const styles = StyleSheet.create({
     paddingVertical: 50,
   },
   emptyText: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#666',
     textAlign: 'center',
+    marginTop: 15,
+    fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  emptySubText: {
+    fontSize: 14,
+    color: '#999',
+    textAlign: 'center',
+    marginTop: 8,
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+  },
+  bottomSpacing: {
+    height: 100,
   },
 });
