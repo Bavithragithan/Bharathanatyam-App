@@ -116,7 +116,7 @@ export default function QuizInterfaceScreen() {
   if (quizCompleted) {
     return (
       <ImageBackground 
-        source={require('@/assets/images/main-menu.jpg')} 
+        source={require('@/assets/images/quiz.jpeg')} 
         style={styles.backgroundImage}
         resizeMode="cover"
       >
@@ -126,7 +126,7 @@ export default function QuizInterfaceScreen() {
               onPress={handleBackToTopics}
               style={styles.backButton}
             >
-              <Ionicons name="arrow-back" size={24} color="#7A4D3A" />
+              <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Quiz Complete!</Text>
             <View style={styles.headerSpacer} />
@@ -237,7 +237,7 @@ export default function QuizInterfaceScreen() {
 
   return (
     <ImageBackground 
-      source={require('@/assets/images/main-menu.jpg')} 
+      source={require('@/assets/images/quiz.jpeg')} 
       style={styles.backgroundImage}
       resizeMode="cover"
     >
@@ -247,7 +247,7 @@ export default function QuizInterfaceScreen() {
             onPress={handleBackToTopics}
             style={styles.backButton}
           >
-            <Ionicons name="arrow-back" size={24} color="#7A4D3A" />
+            <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>{quizData.title}</Text>
           <View style={styles.headerSpacer} />
@@ -270,8 +270,8 @@ export default function QuizInterfaceScreen() {
         <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
           <View style={styles.questionCard}>
             <View style={styles.timerContainer}>
-              <Ionicons name="time" size={20} color={timeLeft <= 10 ? '#F44336' : '#7A4D3A'} />
-              <Text style={[styles.timerText, { color: timeLeft <= 10 ? '#F44336' : '#7A4D3A' }]}>
+              <Ionicons name="time" size={20} color="#FFFFFF" />
+              <Text style={[styles.timerText, { color: '#FFFFFF' }]}>
                 {timeLeft}s
               </Text>
             </View>
@@ -333,19 +333,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 32,
     paddingBottom: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backdropFilter: 'blur(20px)',
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: 'rgba(255, 255, 255, 0.2)',
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
   },
   backButton: {
     padding: 8,
     borderRadius: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backdropFilter: 'blur(10px)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#7A4D3A',
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   headerSpacer: {
     width: 40,
@@ -353,7 +362,10 @@ const styles = StyleSheet.create({
   progressContainer: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backdropFilter: 'blur(20px)',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.2)',
   },
   progressBar: {
     height: 6,
@@ -369,9 +381,12 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: 12,
-    color: '#7A4D3A',
+    color: '#FFFFFF',
     fontWeight: '500',
     textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
   },
   content: {
     flex: 1,
@@ -381,11 +396,17 @@ const styles = StyleSheet.create({
     paddingBottom: 80,
   },
   questionCard: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backdropFilter: 'blur(20px)',
     borderRadius: 16,
     padding: 20,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 5,
   },
   timerContainer: {
     flexDirection: 'row',
@@ -394,9 +415,17 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backdropFilter: 'blur(10px)',
     borderRadius: 20,
     alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
   timerText: {
     fontSize: 16,
@@ -406,10 +435,13 @@ const styles = StyleSheet.create({
   questionText: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#7A4D3A',
+    color: '#FFFFFF',
     lineHeight: 24,
     marginBottom: 20,
     textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   optionsContainer: {
     marginBottom: 20,
@@ -420,14 +452,25 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 16,
     marginBottom: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backdropFilter: 'blur(10px)',
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#E0E0E0',
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
   selectedOption: {
-    borderColor: '#7A4D3A',
-    backgroundColor: '#F5F5F5',
+    borderColor: 'rgba(122, 77, 58, 0.8)',
+    backgroundColor: 'rgba(122, 77, 58, 0.2)',
+    shadowColor: '#7A4D3A',
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 5,
   },
   correctOption: {
     borderColor: '#4CAF50',
@@ -439,12 +482,19 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 16,
-    color: '#7A4D3A',
+    color: '#FFFFFF',
     fontWeight: '500',
     flex: 1,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
   },
   selectedOptionText: {
     fontWeight: '600',
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   correctOptionText: {
     color: '#4CAF50',
@@ -477,29 +527,52 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   submitButton: {
-    backgroundColor: '#7A4D3A',
+    backgroundColor: 'rgba(122, 77, 58, 0.8)',
+    backdropFilter: 'blur(10px)',
     paddingHorizontal: 32,
     paddingVertical: 12,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
   disabledButton: {
-    backgroundColor: '#CCCCCC',
+    backgroundColor: 'rgba(204, 204, 204, 0.6)',
+    backdropFilter: 'blur(5px)',
   },
   submitButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
   },
   nextButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: 'rgba(76, 175, 80, 0.8)',
+    backdropFilter: 'blur(10px)',
     paddingHorizontal: 32,
     paddingVertical: 12,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
   nextButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
   },
   resultContainer: {
     flex: 1,
@@ -508,24 +581,27 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   resultCard: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 20,
     padding: 32,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: 'rgba(255, 255, 255, 0.2)',
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 5 },
-    elevation: 5,
+    shadowOpacity: 0.2,
+    shadowRadius: 15,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 10,
   },
   resultTitle: {
     fontSize: 24,
     fontWeight: '800',
-    color: '#7A4D3A',
+    color: '#FFFFFF',
     marginTop: 16,
     marginBottom: 8,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
   scoreContainer: {
     alignItems: 'center',
@@ -534,66 +610,96 @@ const styles = StyleSheet.create({
   scoreText: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#7A4D3A',
+    color: '#FFFFFF',
     marginBottom: 4,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 3,
   },
   percentageText: {
     fontSize: 32,
     fontWeight: '800',
     marginBottom: 8,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
   gradeText: {
     fontSize: 24,
     fontWeight: '800',
     marginBottom: 8,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
   messageText: {
     fontSize: 16,
-    color: '#7A4D3A',
+    color: '#FFFFFF',
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: 24,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 3,
   },
   resultButtons: {
     position: 'absolute',
     left: 16,
     right: 16,
-    bottom: 12,
+    bottom: 40,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: 12,
   },
   restartButton: {
-    backgroundColor: '#7A4D3A',
+    backgroundColor: 'rgba(122, 77, 58, 0.8)',
     paddingHorizontal: 22,
     paddingVertical: 12,
     borderRadius: 12,
     flex: 1,
     marginRight: 8,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
   restartButtonText: {
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
   },
   backToTopicsButton: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     paddingHorizontal: 18,
     paddingVertical: 10,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
     marginLeft: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
   backToTopicsText: {
-    color: '#7A4D3A',
+    color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
   },
 
   // correctness badge
@@ -625,24 +731,35 @@ const styles = StyleSheet.create({
   reviewTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#ffffffff',
+    color: '#FFFFFF',
     marginBottom: 16,
     textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 3,
   },
   questionReviewCard: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 5,
   },
   questionReviewText: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#7A4D3A',
+    color: '#FFFFFF',
     marginBottom: 12,
     lineHeight: 22,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 3,
   },
   answerReviewContainer: {
     marginBottom: 12,
@@ -653,10 +770,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 12,
     marginBottom: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
   correctAnswerReview: {
     borderColor: '#4CAF50',
@@ -668,9 +785,12 @@ const styles = StyleSheet.create({
   },
   answerReviewText: {
     fontSize: 14,
-    color: '#7A4D3A',
+    color: '#FFFFFF',
     fontWeight: '500',
     flex: 1,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   correctAnswerText: {
     color: '#4CAF50',

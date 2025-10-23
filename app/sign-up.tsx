@@ -383,9 +383,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 40,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: '#ffffffff',
     lineHeight: 36,
-    marginBottom: 2,
+    marginBottom: 0,
     textShadowColor: 'rgba(0, 0, 0, 0.8)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 3,
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: '#ffffffff',
     lineHeight: 36,
     marginTop: 0,
     textShadowColor: 'rgba(0, 0, 0, 0.8)',

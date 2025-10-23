@@ -27,7 +27,7 @@ export default function QuizScreen() {
 
   return (
     <ImageBackground 
-      source={require('@/assets/images/main-menu.jpg')} 
+      source={require('@/assets/images/quiz.jpeg')} 
       style={styles.backgroundImage}
       resizeMode="cover"
     >
@@ -37,7 +37,7 @@ export default function QuizScreen() {
             onPress={() => router.back()}
             style={styles.backButton}
           >
-            <Ionicons name="arrow-back" size={24} color="#7A4D3A" />
+            <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>
             {category === 'theory' ? 'Theory Quiz' : 'Techniques Quiz'}
@@ -46,12 +46,10 @@ export default function QuizScreen() {
         </View>
 
         <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.introSection}>
-            <Text style={styles.introTitle}>Available Quiz Topics</Text>
-            <Text style={styles.introText}>
-              Select a topic you have completed to start the quiz. Each quiz contains 15 questions.
-            </Text>
-          </View>
+          <Text style={styles.pageHeading}>Available Quiz Topics</Text>
+          <Text style={styles.pageSubheading}>
+            Select a topic you have completed to start the quiz. Each quiz contains 15 questions.
+          </Text>
 
           {availableTopics.length > 0 ? (
             <View style={styles.topicsContainer}>
@@ -62,12 +60,13 @@ export default function QuizScreen() {
                   onPress={() => handleTopicSelect(topic)}
                   activeOpacity={0.8}
                 >
-                  <LinearGradient
-                    colors={['#A0522D', '#CD853F', '#D2B48C']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={styles.topicGradient}
-                  >
+                  <View style={styles.topicGradient}>
+                    <LinearGradient
+                      colors={['rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.15)']}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                      style={styles.glassOverlay}
+                    >
                     <View style={styles.topicHeader}>
                       <Text style={styles.topicTitle}>{topic.title}</Text>
                       <Ionicons name="play-circle" size={24} color="#FFFFFF" />
@@ -79,7 +78,8 @@ export default function QuizScreen() {
                       </Text>
                       <Text style={styles.startText}>Start Quiz →</Text>
                     </View>
-                  </LinearGradient>
+                    </LinearGradient>
+                  </View>
                 </TouchableOpacity>
               ))}
             </View>
@@ -121,19 +121,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 32,
     paddingBottom: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: 'rgba(255, 255, 255, 0.2)',
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
   },
   backButton: {
     padding: 8,
     borderRadius: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#7A4D3A',
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   headerSpacer: {
     width: 40,
@@ -145,24 +152,27 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingTop: 24,
   },
-  introSection: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-  introTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#7A4D3A',
+  pageHeading: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    textAlign: 'center',
     marginBottom: 8,
+    marginTop: 20,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
-  introText: {
-    fontSize: 14,
-    color: '#7A4D3A',
-    lineHeight: 20,
+  pageSubheading: {
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 30,
+    paddingHorizontal: 20,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   topicsContainer: {
     gap: 16,
@@ -170,14 +180,23 @@ const styles = StyleSheet.create({
   topicCard: {
     borderRadius: 16,
     overflow: 'hidden',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 6,
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 15,
   },
   topicGradient: {
     padding: 20,
+    backgroundColor: 'transparent',
+  },
+  glassOverlay: {
+    flex: 1,
+    padding: 20,
+    borderRadius: 16,
   },
   topicHeader: {
     flexDirection: 'row',
@@ -190,12 +209,18 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#FFFFFF',
     flex: 1,
+    textShadowColor: 'rgba(0, 0, 0, 0.6)',
+    textShadowOffset: { width: 0, height: 3 },
+    textShadowRadius: 4,
   },
   topicDescription: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: '#FFFFFF',
     lineHeight: 20,
     marginBottom: 16,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 3,
   },
   topicFooter: {
     flexDirection: 'row',
@@ -204,43 +229,75 @@ const styles = StyleSheet.create({
   },
   questionCount: {
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#FFFFFF',
     fontWeight: '500',
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 3,
   },
   startText: {
     fontSize: 14,
     color: '#FFFFFF',
     fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.6)',
+    textShadowOffset: { width: 0, height: 3 },
+    textShadowRadius: 4,
   },
   emptyState: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 60,
     paddingHorizontal: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    marginHorizontal: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 5,
   },
   emptyTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#ffffffff',
+    color: '#FFFFFF',
     marginTop: 16,
     marginBottom: 8,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   emptyText: {
     fontSize: 14,
-    color: '#ffffffff',
+    color: 'rgba(255, 255, 255, 0.9)',
     textAlign: 'center',
     lineHeight: 20,
     marginBottom: 24,
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
   },
   studyButton: {
-    backgroundColor: '#7A4D3A',
+    backgroundColor: 'rgba(122, 77, 58, 0.8)',
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
   studyButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
   },
 });
