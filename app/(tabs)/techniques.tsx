@@ -58,7 +58,7 @@ export default function TechniquesScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
+    <SafeAreaView style={[styles.container, { paddingBottom: 0 }]}>
       <Header title="Techniques" />
 
       <View style={styles.content}>
@@ -85,7 +85,7 @@ export default function TechniquesScreen() {
               <ImageBackground
                 source={require('@/assets/images/shivan.png')}
                 resizeMode="cover"
-                style={styles.hero}
+                style={[styles.hero, { flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }]}
               >
                 {renderHotspot('face', { top: '12%', left: '46%' })}
                 {renderHotspot('hand', { top: '35%', left: '28%' })}
@@ -158,12 +158,12 @@ export default function TechniquesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9EDEF',
+    backgroundColor: 'transparent',
     paddingTop: 20,
   },
   content: {
     flex: 1,
-    backgroundColor: '#F9EDEF',
+    backgroundColor: 'transparent',
   },
   tabsContainer: {
     flexDirection: 'row',

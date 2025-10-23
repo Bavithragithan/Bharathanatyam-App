@@ -53,7 +53,7 @@ export default function CommunityScreen() {
   ];
 
   return (
-    <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom }]}>
+    <SafeAreaView style={[styles.container, { paddingBottom: 0 }]}>
       <Header title="Community" backgroundColor="#FDF2F8" />
 
       <View style={styles.tabsContainer}>
@@ -73,7 +73,7 @@ export default function CommunityScreen() {
 
       <ImageBackground
         source={require('@/assets/images/main-menu.jpeg')}
-        style={[styles.content, { flex: 1 }]}
+        style={[styles.content, { flex: 1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }]}
         imageStyle={{ resizeMode: 'cover', opacity: 0.9 }}
       >
         <FlatList
@@ -100,7 +100,7 @@ export default function CommunityScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FDF2F8',
+    backgroundColor: 'transparent',
     paddingTop: 20,
   },
   tabsContainer: {
