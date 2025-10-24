@@ -2,9 +2,87 @@ import MainMenuHeader from '@/components/ui/MainMenuHeader';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { ImageBackground, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useMemo, useRef, useState } from 'react';
+import { ImageBackground, Modal, PanResponder, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+// Calendar helper functions
+function startOfWeekSunday(date: Date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day;
+  const start = new Date(d.setDate(diff));
+  start.setHours(0, 0, 0, 0);
+  return start;
+}
+
+function addDays(date: Date, days: number) {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+function isSameDay(a: Date, b: Date) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
+
+// Calendar Week Strip Component
+function WeekStrip() {
+  const today = useMemo(() => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    return now;
+  }, []);
+
+  const [weekStart, setWeekStart] = useState<Date>(() => startOfWeekSunday(new Date()));
+
+  const days = useMemo(() => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)), [weekStart]);
+
+  const goPrevWeek = () => setWeekStart(prev => addDays(prev, -7));
+  const goNextWeek = () => setWeekStart(prev => addDays(prev, 7));
+
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  const swipeThreshold = 40;
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gesture) => {
+        return Math.abs(gesture.dx) > 10 && Math.abs(gesture.dy) < 10;
+      },
+      onPanResponderRelease: (_, gesture) => {
+        if (gesture.dx > swipeThreshold) {
+          goPrevWeek();
+        } else if (gesture.dx < -swipeThreshold) {
+          goNextWeek();
+        }
+      }
+    })
+  ).current;
+
+  return (
+    <View style={styles.calendarBar} {...panResponder.panHandlers}>
+      <TouchableOpacity onPress={goPrevWeek} style={styles.navButton}>
+        <Text style={styles.navText}>‹</Text>
+      </TouchableOpacity>
+      <View style={styles.daysRow}>
+        {days.map((d, idx) => {
+          const selected = isSameDay(d, today);
+          return (
+            <View key={idx} style={styles.dayWrapper}>
+              <View style={[styles.dayCell, selected && styles.dayCellSelected]}>
+                <Text style={[styles.dayLabel, selected && styles.dayLabelSelected]}>{dayNames[d.getDay()]}</Text>
+                <Text style={[styles.dateLabel, selected && styles.dateLabelSelected]}>{d.getDate()}</Text>
+              </View>
+            </View>
+          );
+        })}
+      </View>
+      <TouchableOpacity onPress={goNextWeek} style={styles.navButton}>
+        <Text style={styles.navText}>›</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
 
 export default function MainMenuScreen() {
   const router = useRouter();
@@ -46,6 +124,10 @@ export default function MainMenuScreen() {
         resizeMode="cover"
       >
         <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
+          {/* Calendar Section */}
+          <View style={styles.calendarSection}>
+            <WeekStrip />
+          </View>
 
           <View style={styles.grid}>
             {tiles.slice(0, 4).map((t, i) => (
@@ -196,14 +278,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: 'rgba(255, 140, 0, 0.62)',
+    backdropFilter: 'blur(10px)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: 'rgba(255, 140, 0, 0.3)',
     shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 15,
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 5,
     overflow: 'hidden',
     position: 'relative',
   },
@@ -211,9 +294,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '900',
     fontSize: 20,
-    textShadowColor: 'rgba(0, 0, 0, 0.6)',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 4,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
     zIndex: 2,
     letterSpacing: 1,
   },
@@ -224,6 +307,84 @@ const styles = StyleSheet.create({
   singleTile: {
     width: '95%'
   },
+  // Calendar Styles
+  calendarSection: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 8,
+  },
+  calendarBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(16, 66, 146, 0.76)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(59, 130, 246, 0.3)',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+  },
+  navButton: {
+    width: 28,
+    height: 28,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  navText: {
+    fontSize: 20,
+    color: '#FF8C00',
+    fontWeight: '600',
+  },
+  daysRow: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 6
+  },
+  dayWrapper: {
+    flex: 1,
+    alignItems: 'center'
+  },
+  dayCell: {
+    width: 36,
+    height: 36,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+  },
+  dayCellSelected: {
+    backgroundColor: 'rgba(255, 140, 0, 0.8)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 140, 0, 0.3)',
+  },
+  dayLabel: {
+    fontSize: 11,
+    color: '#FFFFFF',
+    fontWeight: '600',
+    lineHeight: 12,
+  },
+  dayLabelSelected: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
+  dateLabel: {
+    fontSize: 13,
+    color: '#FFFFFF',
+    fontWeight: '700',
+    lineHeight: 16,
+  },
+  dateLabelSelected: {
+    color: '#FFFFFF',
+    fontWeight: '800',
+  },
   // Progress Bar Styles
   progressSection: {
     paddingHorizontal: 16,
@@ -231,16 +392,17 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   progressContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: 'rgba(255, 140, 0, 0.62)',
+    backdropFilter: 'blur(10px)',
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'rgba(255, 140, 0, 0.3)',
     shadowColor: '#000',
     shadowOpacity: 0.2,
-    shadowRadius: 15,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 10,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 5,
   },
   progressHeader: {
     flexDirection: 'row',
@@ -252,21 +414,21 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 18,
     fontWeight: '700',
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 3,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   progressPercentage: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '800',
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 3,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   progressBarBackground: {
     height: 8,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: 4,
     marginBottom: 8,
     overflow: 'hidden',
@@ -286,8 +448,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: { width: 0, height: 1 },
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
   // Modal Styles
